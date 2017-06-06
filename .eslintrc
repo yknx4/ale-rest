@@ -13,10 +13,5 @@
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module"
-  },
-  "settings": {
-    "import/resolver": {
-      "babel-root-import": {}
-    }
   }
 }
