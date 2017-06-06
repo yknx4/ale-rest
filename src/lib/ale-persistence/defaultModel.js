@@ -40,6 +40,7 @@ function defaultModel(schema) {
 
   Object.defineProperty(Model, 'name', { value: displayName });
   Object.defineProperty(Model, 'displayName', { value: displayName });
+  Object.defineProperty(Model, 'schema', { value: schema });
 
   return Model;
 }

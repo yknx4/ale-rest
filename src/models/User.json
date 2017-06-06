@@ -7,15 +7,19 @@
     "primaryKey": "id",
     "properties": {
         "first_name": {
+            "fake": "name.firstName",
             "type": "string"
         },
         "last_name": {
+            "fake": "name.lastName",
             "type": "string"
         },
         "username": {
+            "fake": "internet.userName",
             "type": "string"
         },
         "email": {
+            "fake": "internet.email",
             "type": "string",
             "format": "email"
         },

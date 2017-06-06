@@ -1,14 +1,12 @@
 import { User } from './index';
+import { utils } from '~/lib/ale-persistence'; // eslint-disable-line
 
-const requiredFields = {
-  first_name: 'first',
-  last_name: 'last',
-};
+const { test: { build } } = utils;
 
-const invalidEmailAttrs = {
-  ...requiredFields,
-  email: `invalidemail${Math.random()}`,
-};
+const validAttributes = () => build(User);
+
+const invalidEmailAttrs = () =>
+  Object.assign({}, validAttributes(), { email: 'invalidEmail' });
 
 describe('User', () => {
   test('Model', () => {
@@ -18,7 +16,7 @@ describe('User', () => {
 
   describe('Schema Validations', () => {
     it('should validate email', async () => {
-      const user = new User(invalidEmailAttrs);
+      const user = new User(invalidEmailAttrs());
       const isValid = await user.validateWithSchema();
       const errors = user.schemaErrors;
 
@@ -32,7 +30,7 @@ describe('User', () => {
 
   describe('save', () => {
     it('should prevent save with invalid schema', async () => {
-      const user = new User(invalidEmailAttrs);
+      const user = new User(invalidEmailAttrs());
       await expect(user.save()).rejects.toEqual(Error('Invalid Object'));
     });
   });
