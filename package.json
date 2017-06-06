@@ -5,13 +5,16 @@
   "main": "src/index.js",
   "scripts": {
     "start": "nodemon src/index.js --exec babel-node",
-    "test": "jest",
+    "test": "jest --forceExit",
+    "test:watch": "jest --watch",
     "build": "babel src -s -d build",
     "serve": "node build/index.js",
     "precommit": "lint-staged",
     "knex": "knex",
+    "db": "knex-migrate",
     "migrate:make": "knex migrate:make",
-    "db:migrate": "knex-migrate up"
+    "db:migrate": "knex-migrate up",
+    "db:test:prepare": "NODE_ENV=test yarn db:migrate"
   },
   "author": "",
   "license": "ISC",

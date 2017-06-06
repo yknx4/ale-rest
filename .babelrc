@@ -2,7 +2,6 @@
   "presets": [
     "flow",
     ["env", {
-      "debug": true,
       "exclude": ["transform-async-to-generator"],
       "targets": {
         "node": "current"
