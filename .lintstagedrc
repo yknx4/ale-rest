@@ -1,9 +1,9 @@
 {
   "src/**/*.js": [
-      "jsinspect",
-      "jshint",
-      "prettier --write --trailing-comma all ",
+      "prettier --write --trailing-comma es5 --single-quote",
       "eslint --fix",
+      "jsinspect",
+      "jshint --verbose",
       "git add"
     ]
 }

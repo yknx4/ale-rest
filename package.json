@@ -31,7 +31,6 @@
     "babel-plugin-transform-inline-environment-variables": "^0.1.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-plugin-transform-simplify-comparison-operators": "^6.8.3",
-    "babel-plugin-undeclared-variables-check": "^6.22.0",
     "babel-preset-env": "^1.5.1",
     "babel-preset-flow": "^6.23.0",
     "eslint": "^3.19.0",
@@ -53,7 +52,10 @@
     "regenerator-runtime": "^0.10.5"
   },
   "dependencies": {
+    "caller": "^1.0.1",
+    "debug": "^2.6.8",
     "flow-runtime": "^0.12.0",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "tracer": "^0.8.9"
   }
 }

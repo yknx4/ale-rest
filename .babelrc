@@ -20,7 +20,6 @@
     "babel-plugin-minify-guarded-expressions",
     "babel-plugin-minify-simplify",
     "babel-plugin-transform-simplify-comparison-operators",
-    "babel-plugin-undeclared-variables-check",
     "lodash",
     "babel-plugin-root-import",
     "babel-plugin-loop-optimizer",
