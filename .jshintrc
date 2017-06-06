@@ -6,9 +6,14 @@
 
   // Define globals exposed by Node.js.
   "node": true,
+  "jasmine": true,
 
   // Allow ES6.
   "esversion": 6,
+
+  "predef": [
+    "test"
+    ],
 
   /*
    * ENFORCING OPTIONS
