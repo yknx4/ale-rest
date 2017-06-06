@@ -6,5 +6,5 @@
   "minInstances":  2,
   "ignore":        "test|spec|mock",
   "reporter":      "json",
-  "truncate":      100,
+  "truncate":      100
 }
