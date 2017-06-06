@@ -1,0 +1,33 @@
+{
+  "presets": [
+    "flow",
+    ["env", {
+      "debug": true,
+      "exclude": ["transform-async-to-generator"],
+      "targets": {
+        "node": "current"
+      }
+    }]
+  ],
+  "plugins": [
+    "fast-async",
+    "transform-object-rest-spread",
+    "babel-plugin-transform-function-bind",
+    "babel-plugin-transform-class-properties",
+    "babel-plugin-transform-inline-environment-variables",
+    "babel-plugin-minify-dead-code-elimination",
+    "babel-plugin-minify-constant-folding",
+    "babel-plugin-minify-guarded-expressions",
+    "babel-plugin-minify-simplify",
+    "babel-plugin-transform-simplify-comparison-operators",
+    "babel-plugin-undeclared-variables-check",
+    "lodash",
+    "babel-plugin-root-import",
+    "babel-plugin-loop-optimizer",
+    "babel-plugin-closure-elimination",
+    ["flow-runtime", {
+      "assert": true,
+      "annotate": true
+    }]
+  ]
+}
