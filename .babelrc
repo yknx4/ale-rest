@@ -21,7 +21,9 @@
     "babel-plugin-minify-simplify",
     "babel-plugin-transform-simplify-comparison-operators",
     "lodash",
-    "babel-plugin-root-import",
+    ["babel-plugin-root-import", {
+      "rootPathSuffix": "src"
+    }],
     "babel-plugin-loop-optimizer",
     "babel-plugin-closure-elimination",
     ["flow-runtime", {
