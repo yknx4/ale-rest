@@ -4,9 +4,14 @@
     "type": "object",
     "tableName": "users",
     "additionalProperties": false,
+    "description": "awesome description",
     "primaryKey": "id",
     "properties": {
+        "id": {
+            "type": "integer"
+        },
         "first_name": {
+            "description": "whata",
             "fake": "name.firstName",
             "type": "string"
         },
