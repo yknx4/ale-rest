@@ -52,9 +52,12 @@
     "regenerator-runtime": "^0.10.5"
   },
   "dependencies": {
+    "body-parser": "^1.17.2",
     "caller": "^1.0.1",
+    "cors": "^2.8.3",
     "debug": "^2.6.8",
     "dotenv": "^4.0.0",
+    "errorhandler": "^1.5.0",
     "express": "^4.15.3",
     "flow-runtime": "^0.12.0",
     "lodash": "^4.17.4",
