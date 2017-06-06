@@ -5,6 +5,11 @@ const requiredFields = {
   last_name: 'last',
 };
 
+const invalidEmailAttrs = {
+  ...requiredFields,
+  email: `invalidemail${Math.random()}`,
+};
+
 describe('User', () => {
   test('Model', () => {
     expect(User.name).toBe('User');
@@ -13,7 +18,7 @@ describe('User', () => {
 
   describe('Schema Validations', () => {
     it('should validate email', async () => {
-      const user = new User({ ...requiredFields, email: 'invalidemail' });
+      const user = new User(invalidEmailAttrs);
       const isValid = await user.validateWithSchema();
       const errors = user.schemaErrors;
 
@@ -22,6 +27,13 @@ describe('User', () => {
       expect(isValid).toBeFalsy();
       expectError.toHaveProperty('dataPath', '.email');
       expectError.toHaveProperty('keyword', 'format');
+    });
+  });
+
+  describe('save', () => {
+    it('should prevent save with invalid schema', async () => {
+      const user = new User(invalidEmailAttrs);
+      await expect(user.save()).rejects.toEqual(Error('Invalid Object'));
     });
   });
 });

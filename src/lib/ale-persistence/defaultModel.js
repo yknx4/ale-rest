@@ -1,20 +1,9 @@
 import stringify from 'json-stringify-safe';
 import ajv from './config/ajv';
-import { ModelBase, bookshelfDb } from './config/knex';
+import { ModelBase } from './config/knex';
 import logger from '~/logger'; // eslint-disable-line
 
 const { debug, info } = logger();
-
-bookshelfDb.Model.prototype.validateWithSchema = function validateWithSchema() {
-  info(
-    `Validating ${stringify(this.attributes)} against ${this.schema
-      .title} schema.`
-  );
-  const validSchema = this.schemaValidator(this.attributes);
-  info(`Result: ${validSchema}`);
-  this.schemaErrors = this.schemaValidator.errors;
-  return Promise.resolve(validSchema);
-};
 
 function defaultModel(schema) {
   const { tableName, title: displayName } = schema;
@@ -22,9 +11,31 @@ function defaultModel(schema) {
   debug(`Creating model ${displayName} with table ${tableName}`);
 
   const Model = ModelBase.extend({
+    constructor: function constructor() {
+      ModelBase.apply(this, arguments); // eslint-disable-line prefer-rest-params
+      this.on('saving', this.validateSaveSchema);
+    },
     tableName,
     schemaValidator: ajv.compile(schema),
     schema,
+    validateWithSchema: function validateWithSchema() {
+      info(
+        `Validating ${stringify(this.attributes)} against ${this.schema
+          .title} schema.`
+      );
+      const validSchema = this.schemaValidator(this.attributes);
+      info(`Result: ${validSchema}`);
+      this.schemaErrors = this.schemaValidator.errors;
+      return Promise.resolve(validSchema);
+    },
+    validateSaveSchema: function validateSaveSchema() {
+      return this.validateWithSchema().then(valid => {
+        if (!valid) {
+          return Promise.reject(new Error('Invalid Object'));
+        }
+        return Promise.resolve();
+      });
+    },
   });
 
   Object.defineProperty(Model, 'name', { value: displayName });
