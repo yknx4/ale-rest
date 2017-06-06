@@ -55,6 +55,7 @@
     "caller": "^1.0.1",
     "debug": "^2.6.8",
     "express": "^4.15.3",
+    "dotenv": "^4.0.0",
     "flow-runtime": "^0.12.0",
     "lodash": "^4.17.4",
     "tracer": "^0.8.9"
