@@ -17,7 +17,7 @@
         },
         "email": {
             "type": "string",
-            "forman": "email"
+            "format": "email"
         },
         "created_at": {
           "anyOf": [
@@ -48,5 +48,5 @@
       ]
       }
   },
-  "required": ["firstName", "lastName"]
+  "required": ["first_name", "last_name"]
 }

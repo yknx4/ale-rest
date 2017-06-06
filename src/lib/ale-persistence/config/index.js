@@ -1,3 +1,4 @@
 import knex from './knex';
+import ajv from './ajv';
 
-export { knex }; // eslint-disable-line
+export { knex, ajv };
