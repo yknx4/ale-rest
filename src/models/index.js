@@ -1,6 +1,6 @@
 import { defaultModel } from '~/lib/ale-persistence'; // eslint-disable-line
+import userSchema from './User.json';
 
-const createModel = name => defaultModel(require(`./${name}.json`)); // eslint-disable-line
-const User = createModel('User');
+const User = defaultModel(userSchema);
 
 export { User }; // eslint-disable-line import/prefer-default-export

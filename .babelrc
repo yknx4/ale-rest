@@ -11,6 +11,7 @@
   "plugins": [
     "fast-async",
     "transform-object-rest-spread",
+    "babel-plugin-inline-json-import",
     "babel-plugin-transform-function-bind",
     "babel-plugin-transform-class-properties",
     "babel-plugin-transform-inline-environment-variables",
