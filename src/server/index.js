@@ -1,10 +1,9 @@
-/* eslint import/no-unresolved: [2, { ignore: ['^~/'] }]*/
 import express from 'express';
 import morgan from 'morgan';
 import errorHandler from 'errorhandler';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import logger from '~/logger'; // eslint-disable-line import/extensions
+import logger from '~/logger'; // eslint-disable-line
 import {
   morgan as morganConfig,
   errorhandler as errorhandlerConfig,

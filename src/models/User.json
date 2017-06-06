@@ -1,0 +1,52 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "title": "User",
+    "type": "object",
+    "tableName": "users",
+    "additionalProperties": false,
+    "primaryKey": "id",
+    "properties": {
+        "first_name": {
+            "type": "string"
+        },
+        "last_name": {
+            "type": "string"
+        },
+        "username": {
+            "type": "string"
+        },
+        "email": {
+            "type": "string",
+            "forman": "email"
+        },
+        "created_at": {
+          "anyOf": [
+            {
+              "type": "null"
+          },
+          {
+              "type": "object"
+          },
+          {
+              "type": "string",
+              "format": "date-time"
+          }
+      ]
+      },
+      "updated_at": {
+          "anyOf": [
+            {
+              "type": "null"
+          },
+          {
+              "type": "object"
+          },
+          {
+              "type": "string",
+              "format": "date-time"
+          }
+      ]
+      }
+  },
+  "required": ["firstName", "lastName"]
+}
