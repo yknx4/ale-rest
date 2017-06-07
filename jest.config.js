@@ -2,7 +2,7 @@ module.exports = {
   verbose: true,
   bail: true,
   collectCoverage: true,
-  collectCoverageFrom: ["src/**/*.js", "!**/node_modules/**", "!**/vendor/**"],
+  collectCoverageFrom: ["src/**/*.js", "!**/node_modules/**", "!**/vendor/**", "!src/**/index.js"],
   coverageDirectory: '../coverage',
   coverageThreshold: {
       global: {
