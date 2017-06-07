@@ -7,13 +7,13 @@ module.exports = {
     "!**/node_modules/**",
     "!**/vendor/**",
     "!src/**/index.js",
-    "!src/config/*.js",
+    "!src/**/config/*.js",
   ],
   coverageDirectory: "../coverage",
   coverageThreshold: {
     global: {
       branches: 50,
-      functions: 90,
+      functions: 80,
       lines: 50,
       statements: 70
     }
