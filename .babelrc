@@ -1,4 +1,5 @@
 {
+  "sourceMaps": true,
   "presets": [
     "flow",
     ["env", {
@@ -20,7 +21,6 @@
       "rootPathSuffix": "src"
     }],
     ["flow-runtime", {
-      "assert": true,
       "annotate": true
     }]
   ],

@@ -1,69 +1,66 @@
 // Update with your config settings.
-
 module.exports = {
-
   development: {
-   client: 'postgresql',
+    client: "postgresql",
     connection: {
-      database: 'ale-rest-development',
-      user:     'postgres',
-      password: 'postgres'
+      database: "ale-rest-development",
+      user: "postgres",
+      password: "postgres"
     },
     pool: {
       min: 2,
-      max: 10
+      max: 20
     },
     migrations: {
-      tableName: 'knex_migrations'
+      tableName: "knex_migrations"
     }
   },
 
   test: {
-   client: 'postgresql',
+    client: "postgresql",
     connection: {
-      database: 'ale-rest-test',
-      user:     'postgres',
-      password: 'postgres'
+      database: "ale-rest-test",
+      user: "postgres",
+      password: "postgres"
     },
     pool: {
-      min: 2,
-      max: 10
+      min: 5,
+      max: 100
     },
     migrations: {
-      tableName: 'knex_migrations'
+      tableName: "knex_migrations"
     }
   },
 
   staging: {
-    client: 'postgresql',
+    client: "postgresql",
     connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
+      database: "my_db",
+      user: "username",
+      password: "password"
     },
     pool: {
       min: 2,
       max: 10
     },
     migrations: {
-      tableName: 'knex_migrations'
+      tableName: "knex_migrations"
     }
   },
 
   production: {
-    client: 'postgresql',
+    client: "postgresql",
     connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
+      database: "my_db",
+      user: "username",
+      password: "password"
     },
     pool: {
       min: 2,
       max: 10
     },
     migrations: {
-      tableName: 'knex_migrations'
+      tableName: "knex_migrations"
     }
   }
-
 };
