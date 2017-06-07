@@ -5,6 +5,7 @@ import {
   camelKey,
   pluralKey,
   resolveSingleElement,
+  asFn,
 } from './selectors';
 
 describe('selectors', () => {
@@ -63,6 +64,14 @@ describe('selectors', () => {
     it('should find model by id', () => {
       resolveSingleElement(models, 'Model')(null, { id: 1 });
       expect(finder).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('asFn', () => {
+    it('shoudl return a function that returns the input', () => {
+      const input = {};
+      const fn = asFn(input);
+      expect(fn()).toBe(input);
     });
   });
 });
