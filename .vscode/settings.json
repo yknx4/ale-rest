@@ -7,13 +7,12 @@
     "editor.fontLigatures": true,
     "editor.renderIndentGuides": true,
     "prettier.eslintIntegration": true,
-    "prettier.useFlowParser": true,
     "prettier.singleQuote": true,
     "prettier.trailingComma": "es5",
     "prettier.jsxBracketSameLine": true,
-    "jest.enableInlineErrorMessages": true,
     "docthis.inferTypesFromNames": true,
     "sortImports.suppressWarnings": true,
     "flow.useNPMPackagedFlow": true,
-    "npm-intellisense.scanDevDependencies": false
+    "npm-intellisense.scanDevDependencies": false,
+    "javascript.validate.enable": false
 }
