@@ -9,8 +9,12 @@ const { info } = logger();
 
 function createInputType(model: Function): GraphQLInputObjectType {
   const { schema } = model;
-  const { title: name, properties } = schema;
-  info(`Creating GraphQLInputObjectType for ${name}`);
+  const { title: name, properties, description } = schema;
+  info(
+    `Creating GraphQLInputObjectType for ${name}${description != null
+      ? ` with description ${description}`
+      : ''}`
+  );
   // debug(properties);
   let fieldsData = mapValues(properties, generateInputField);
   fieldsData = mapKeys(fieldsData, camelKey);
@@ -18,6 +22,7 @@ function createInputType(model: Function): GraphQLInputObjectType {
   return new GraphQLInputObjectType({
     name: `${name}Input`,
     fields: fieldsData,
+    description,
   });
 }
 
