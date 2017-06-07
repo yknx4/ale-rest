@@ -5,9 +5,12 @@
   "main": "src/index.js",
   "scripts": {
     "console": "babel-node",
+    "prestart": "nvm use",
     "start": "nodemon src/index.js --exec babel-node",
+    "pretest": "nvm use && yarn && yarn db:migrate",
     "test": "jest --forceExit",
     "test:watch": "jest --watch",
+    "prebuild": "nvm use",
     "build": "babel src -s -d build",
     "serve": "node build/index.js",
     "precommit": "lint-staged",
