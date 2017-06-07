@@ -11,4 +11,6 @@ const db = knex(knexConfig[configPath]);
 const bookshelfDb = bookshelf(db);
 const ModelBase = bookshelfModel(bookshelfDb);
 
+bookshelfDb.plugin('pagination');
+
 export { db, bookshelfDb, ModelBase };

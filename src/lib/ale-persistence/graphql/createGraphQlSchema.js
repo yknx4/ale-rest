@@ -1,101 +1,67 @@
 import {
   GraphQLSchema,
   GraphQLObjectType,
-  GraphQLString,
   GraphQLInterfaceType,
-  GraphQLNonNull,
-  GraphQLInt,
+  GraphQLList,
 } from 'graphql';
 
-import { mapValues, mapKeys, isString, values } from 'lodash';
-import { camel } from 'case';
+import { mapValues, mapKeys, values } from 'lodash';
 
-import resolve from './getOutputFromInstance';
-import logger from '~/logger'; // eslint-disable-line
-// const { debug } = logger();
+import {
+  camelKey,
+  pluralKey,
+  resolveSingleElement,
+  resolveCollection,
+} from './selectors';
+import {
+  defaultInputFields,
+  modelInterfaceDefaults,
+  elementQueryDefaults,
+} from './types';
+import { createObjectType, createInputType } from './generators';
 
-const getDescription = description =>
-  isString(description) ? description : 'Missing Description';
-const camelKey = (_, k) => camel(k);
-
-const schemaGraphTypeMap = {
-  [undefined]: GraphQLString,
-  string: GraphQLString,
-  integer: new GraphQLNonNull(GraphQLInt),
-};
-
-function generateField({ type, description }: Object): Object {
-  return {
-    type: schemaGraphTypeMap[type],
-    description: getDescription(description),
-    resolve,
-  };
-}
-
-function createType(
-  model,
-  graphqlInterface: GraphQLInterfaceType
-): GraphQLObjectType {
-  const { schema } = model;
-  const { title: name, description, properties } = schema;
-  // debug(properties);
-  let fieldsData = mapValues(properties, generateField);
-  fieldsData = mapKeys(fieldsData, camelKey);
-  // debug(fieldsData);
-  const fields = () => fieldsData;
-  return new GraphQLObjectType({
-    name,
-    description,
-    fields,
-    interfaces: [graphqlInterface],
-  });
-}
-
-function createGraphQlRootQuery(models): GraphQLSchema {
+function createGraphQlRootQuery(models: Object): GraphQLSchema {
   const typesMap = {};
+  const inputsMap = {};
 
   const modelInterface = new GraphQLInterfaceType({
-    name: 'Model',
-    description: 'A valid ale-rest Model',
-    fields: () => ({
-      id: {
-        type: new GraphQLNonNull(GraphQLInt),
-        description: 'The id of the model.',
-      },
-      createdAt: {
-        type: GraphQLString,
-        description: 'When it was created',
-      },
-      updatedAt: {
-        type: GraphQLString,
-        description: 'When it was udpated',
-      },
-    }),
+    ...modelInterfaceDefaults,
     resolveType(instance) {
       return typesMap[instance.constructor.name];
     },
   });
-  // debug(models);
+
   Object.assign(
     typesMap,
-    mapValues(models, m => createType(m, modelInterface))
+    mapValues(models, m => createObjectType(m, modelInterface))
   );
-  // debug('TypesMap');
-  // debug(typesMap);
-  let queryFieldsData = mapValues(typesMap, (v, name) => ({
+
+  Object.assign(inputsMap, mapValues(models, createInputType));
+
+  let elementQueryFields = mapValues(typesMap, (v, name) => ({
+    ...elementQueryDefaults,
     type: modelInterface,
-    args: {
-      id: {
-        description: `id of the ${name}`,
-        type: new GraphQLNonNull(GraphQLInt),
-      },
-    },
-    resolve: (root, { id }) => models[name].findById(id),
+    resolve: resolveSingleElement(models, name),
   }));
 
-  queryFieldsData = mapKeys(queryFieldsData, camelKey);
-  // debug(queryFieldsData);
-  const fields = () => queryFieldsData;
+  elementQueryFields = mapKeys(elementQueryFields, camelKey);
+
+  let collectionQueryFields = mapValues(typesMap, (v, name) => ({
+    type: new GraphQLList(modelInterface),
+    args: {
+      ...defaultInputFields,
+      query: {
+        description: 'values to filter by',
+        type: inputsMap[name],
+      },
+    },
+    resolve: resolveCollection(models, name),
+  }));
+
+  collectionQueryFields = mapKeys(collectionQueryFields, camelKey);
+  collectionQueryFields = mapKeys(collectionQueryFields, pluralKey);
+
+  const fields = () => ({ ...elementQueryFields, ...collectionQueryFields });
 
   const queryType = new GraphQLObjectType({
     name: 'Query',
