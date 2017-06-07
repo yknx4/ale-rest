@@ -1,12 +1,16 @@
 import { mapKeys, memoize, isString } from 'lodash';
 import { camel } from 'case';
 import plural from 'pluralize';
+import logger from '~/logger'; // eslint-disable-line
+
+const { info } = logger();
 
 const instanceToResult = memoize(instance =>
   mapKeys(instance.attributes, (_, key) => camel(key))
 );
 
 function getOutputFromInstance(data: Object, _, __, meta: Object) {
+  info(`Getting ${meta.fieldName} from ${JSON.stringify(data)}`);
   const transformedData = instanceToResult(data);
   return transformedData[meta.fieldName];
 }
@@ -39,4 +43,5 @@ export {
   pluralKey,
   resolveSingleElement,
   resolveCollection,
+  instanceToResult,
 };
