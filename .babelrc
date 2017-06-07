@@ -11,18 +11,12 @@
   "plugins": [
     "fast-async",
     "lodash",
+    "closure-elimination",
     "transform-object-rest-spread",
-    "babel-plugin-inline-json-import",
-    "babel-plugin-closure-elimination",
-    "babel-plugin-loop-optimizer",
-    "babel-plugin-transform-function-bind",
-    "babel-plugin-transform-class-properties",
-    "babel-plugin-transform-simplify-comparison-operators",
-    "babel-plugin-minify-simplify",
-    "babel-plugin-minify-constant-folding",
-    "babel-plugin-minify-dead-code-elimination",
-    "babel-plugin-minify-guarded-expressions",
-    ["babel-plugin-root-import", {
+    "loop-optimizer",
+    "transform-function-bind",
+    "transform-class-properties",
+    ["root-import", {
       "rootPathSuffix": "src"
     }],
     ["flow-runtime", {
@@ -30,8 +24,26 @@
       "annotate": true
     }]
   ],
-  "ignore": [
-    "**/*.test.js",
-    "**/node_modules/*.js"
-  ]
+  "env": {
+    "production": {
+      "ignore": [
+        "**/*.test.js",
+        "**/node_modules/*.js"
+      ],
+      "plugins": [
+        "transform-property-literals",
+        "transform-node-env-inline",
+        "inline-json-import",
+        "transform-simplify-comparison-operators",
+        "inline-dotenv",
+        "transform-inline-environment-variables",
+        "minify-constant-folding",
+        "minify-dead-code-elimination",
+        "minify-guarded-expressions",
+        "minify-simplify",
+        "minify-flip-comparisons",
+        "minify-numeric-literals"
+      ]
+    }
+  }
 }

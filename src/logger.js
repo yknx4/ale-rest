@@ -20,11 +20,10 @@ const logger = tracer.colorConsole({
   },
 });
 const hookLogger = (instance, name) => input => {
-  if (instance.enabled) {
+  if (process.env.NODE_ENV !== 'production' && instance.enabled) {
     instance(input);
-  } else {
-    logger[name](input);
   }
+  logger[name](input);
 };
 
 function finalLogger() {
