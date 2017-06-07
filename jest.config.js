@@ -6,7 +6,8 @@ module.exports = {
     "src/**/*.js",
     "!**/node_modules/**",
     "!**/vendor/**",
-    "!src/**/index.js"
+    "!src/**/index.js",
+    "!src/config/*.js",
   ],
   coverageDirectory: "../coverage",
   coverageThreshold: {
