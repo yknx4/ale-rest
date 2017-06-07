@@ -12,7 +12,6 @@
     "prettier.jsxBracketSameLine": true,
     "docthis.inferTypesFromNames": true,
     "sortImports.suppressWarnings": true,
-    "flow.useNPMPackagedFlow": true,
     "npm-intellisense.scanDevDependencies": false,
     "javascript.validate.enable": false
 }
