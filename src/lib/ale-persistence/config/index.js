@@ -1,4 +1,4 @@
-import knex from './knex';
+import initBookshelf from './bookshelf';
 import ajv from './ajv';
 
-export { knex, ajv };
+export { initBookshelf, ajv };
