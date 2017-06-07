@@ -7,8 +7,8 @@ import { jsonSchemaTypeToGraphQlType } from '../types';
 import logger from '~/logger'; // eslint-disable-line
 const { info } = logger();
 
-const getType = ({ type }) => type;
-const getDescription = ({ description }) => description;
+const getType = ({ type }): ?string => type;
+const getDescription = ({ description }): ?string => description;
 
 const generateField = createSelector(
   [getType, getDescription],

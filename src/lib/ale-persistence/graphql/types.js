@@ -5,7 +5,7 @@ import {
   GraphQLString,
 } from 'graphql';
 
-const jsonSchemaTypeToGraphQlType = type =>
+const jsonSchemaTypeToGraphQlType = (type: ?string) =>
   ({
     string: GraphQLString,
     integer: new GraphQLNonNull(GraphQLInt),

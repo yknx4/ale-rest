@@ -5,7 +5,7 @@ import logger from '~/logger'; // eslint-disable-line
 
 const { debug, info } = logger();
 
-function defaultModel(schema) {
+function defaultModel(schema: Object): Function {
   const { tableName, title: displayName } = schema;
 
   debug(`Creating model ${displayName} with table ${tableName}`);

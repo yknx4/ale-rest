@@ -1,10 +1,10 @@
 import { fake } from 'faker';
 import { pickBy, mapValues, isString } from 'lodash';
 
-const hasFake = p => isString(p.fake);
-const fakeData = p => fake(`{{${p.fake}}}`);
+const hasFake = (p: Object): boolean => isString(p.fake);
+const fakeData = (p: Object): string => fake(`{{${p.fake}}}`);
 
-function build(model) {
+function build(model: Function): Object {
   const { schema: { properties } } = model;
   return mapValues(pickBy(properties, hasFake), fakeData);
 }

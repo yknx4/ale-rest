@@ -6,20 +6,20 @@ const instanceToResult = memoize(instance =>
   mapKeys(instance.attributes, (_, key) => camel(key))
 );
 
-function getOutputFromInstance(data, _, __, meta) {
+function getOutputFromInstance(data: Object, _, __, meta: Object) {
   const transformedData = instanceToResult(data);
   return transformedData[meta.fieldName];
 }
 
-const getDescription = description =>
+const getDescription = (description: ?string): string =>
   isString(description) ? description : 'Missing Description';
 
-const camelKey = (_, k) => camel(k);
-const pluralKey = (_, k) => plural(k);
+const camelKey = (_, k: string): string => camel(k);
+const pluralKey = (_, k: string): string => plural(k);
 
-const resolveSingleElement = (models, name) => (root, { id }) =>
+const resolveSingleElement = (models: Object, name: string) => (root, { id }) =>
   models[name].findById(id);
-const resolveCollection = (models, name) => (
+const resolveCollection = (models: Object, name: string) => (
   root,
   { query = {}, order, page = 1, pageSize = 10 }
 ) => {

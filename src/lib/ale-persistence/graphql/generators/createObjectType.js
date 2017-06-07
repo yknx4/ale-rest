@@ -8,7 +8,7 @@ import logger from '~/logger'; // eslint-disable-line
 const { info } = logger();
 
 function createObjectType(
-  model,
+  model: Function,
   graphqlInterface: GraphQLInterfaceType
 ): GraphQLObjectType {
   const { schema } = model;

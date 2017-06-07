@@ -7,7 +7,7 @@ import { generateInputField } from './index';
 import logger from '~/logger'; // eslint-disable-line
 const { info } = logger();
 
-function createInputType(model): GraphQLInputObjectType {
+function createInputType(model: Function): GraphQLInputObjectType {
   const { schema } = model;
   const { title: name, properties } = schema;
   info(`Creating GraphQLInputObjectType for ${name}`);
