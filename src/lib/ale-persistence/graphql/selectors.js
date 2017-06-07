@@ -36,6 +36,8 @@ const resolveCollection = (models: Object, name: string) => (
     .fetchPage({ page, pageSize });
 };
 
+const asFn = memoize(input => () => input);
+
 export {
   getOutputFromInstance,
   getDescription,
@@ -44,4 +46,5 @@ export {
   resolveSingleElement,
   resolveCollection,
   instanceToResult,
+  asFn,
 };

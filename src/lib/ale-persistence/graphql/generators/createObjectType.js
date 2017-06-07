@@ -2,7 +2,7 @@ import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
 
 import { mapValues, mapKeys } from 'lodash';
 
-import { camelKey } from '../selectors';
+import { camelKey, asFn } from '../selectors';
 import { generateField } from './index';
 import logger from '~/logger'; // eslint-disable-line
 const { info } = logger();
@@ -18,9 +18,9 @@ function createObjectType(
   let fieldsData = mapValues(properties, generateField);
   fieldsData = mapKeys(fieldsData, camelKey);
   // debug(fieldsData);
-  const fields = () => fieldsData;
+  const fields = asFn(fieldsData);
   return new GraphQLObjectType({
-    name,
+    name: `${name}ObjectType`,
     description,
     fields,
     interfaces: [graphqlInterface],
