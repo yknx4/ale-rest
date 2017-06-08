@@ -5,7 +5,7 @@ import { mapValues, mapKeys } from 'lodash';
 import { camelKey, asFn } from '../selectors';
 import { generateField } from './index';
 import logger from '~/logger'; // eslint-disable-line
-const { info } = logger();
+const { info } = logger;
 
 function createObjectType(
   model: Function,

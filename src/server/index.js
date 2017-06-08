@@ -12,7 +12,7 @@ import {
   errorhandler as errorhandlerConfig,
 } from './config';
 
-const { info } = logger();
+const { info } = logger;
 
 const app = express();
 app.set('port', process.env.PORT || 3000);

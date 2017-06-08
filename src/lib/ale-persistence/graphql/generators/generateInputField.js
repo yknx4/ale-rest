@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { jsonSchemaTypeToGraphQlType } from '../types';
 import logger from '~/logger'; // eslint-disable-line
-const { info } = logger();
+const { info } = logger;
 
 const getType = ({ type }): ?string => type;
 

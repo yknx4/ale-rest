@@ -4,7 +4,7 @@ import { camel } from 'case';
 import getLoader from '../db/getLoader';
 import logger from '~/logger'; // eslint-disable-line
 
-const { info } = logger();
+const { info } = logger;
 
 const instanceToResult = memoize(instance =>
   mapKeys(instance.attributes, (_, key) => camel(key))

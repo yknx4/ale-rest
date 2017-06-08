@@ -4,7 +4,7 @@ import initBookshelf from '../config/bookshelf';
 import { validateWithSchema, validateSaveSchema } from './modelExtensions';
 import logger from '~/logger'; // eslint-disable-line
 
-const { debug } = logger();
+const { debug } = logger;
 
 const GenerateDefaultModel = knex => {
   const { Model: ModelBase, bookshelf } = initBookshelf(knex);
