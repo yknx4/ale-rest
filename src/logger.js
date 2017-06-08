@@ -9,11 +9,16 @@ const logger = tracerdebug.colorConsole({
     {
       error:
         '{{timestamp}} {{path}}:{{line}} <{{title}}> {{message}} \nCall Stack:\n{{stack}}',
+      log: '{{timestamp}} <{{title}}> {{message}} \nCall Stack:\n{{stack}}',
     },
   ],
   dateformat: 'HH:MM:ss.L',
   preprocess: data => {
-    data.path = data.path.replace(path, ''); // eslint-disable-line no-param-reassign
+    if (data.title === 'log') {
+      data.path = 'ale-server'; // eslint-disable-line no-param-reassign
+    } else {
+      data.path = data.path.replace(path, ''); // eslint-disable-line no-param-reassign
+    }
   },
 });
 export default logger;
