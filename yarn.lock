@@ -2506,6 +2506,12 @@ hawk@~3.1.3:
     hoek "2.x.x"
     sntp "1.x.x"
 
+hide-stack-frames-from@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/hide-stack-frames-from/-/hide-stack-frames-from-1.0.0.tgz#5a4af45047391fc9cd79fce8af673d8b7463229f"
+  dependencies:
+    stack-chain "^1.3.0"
+
 hoek@2.x.x:
   version "2.16.3"
   resolved "https://registry.yarnpkg.com/hoek/-/hoek-2.16.3.tgz#20bb7403d3cea398e91dc4710a8ff1b8274a25ed"
@@ -4752,6 +4758,10 @@ sshpk@^1.7.0:
 stable@0.1.6:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.6.tgz#910f5d2aed7b520c6e777499c1f32e139fdecb10"
+
+stack-chain@^1.3.0:
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/stack-chain/-/stack-chain-1.3.7.tgz#d192c9ff4ea6a22c94c4dd459171e3f00cea1285"
 
 staged-git-files@0.0.4:
   version "0.0.4"
