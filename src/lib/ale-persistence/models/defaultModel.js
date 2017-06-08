@@ -4,14 +4,14 @@ import initBookshelf from '../config/bookshelf';
 import { validateWithSchema, validateSaveSchema } from './modelExtensions';
 import logger from '~/logger'; // eslint-disable-line
 
-const { debug } = logger;
+const { info } = logger;
 
 const GenerateDefaultModel = knex => {
   const { Model: ModelBase, bookshelf } = initBookshelf(knex);
   const generatorFn = memoize((schema: Object): Function => {
     const { tableName, title: displayName } = schema;
 
-    debug(`Creating model ${displayName} with table ${tableName}`);
+    info(`Creating model ${displayName} with table ${tableName}`);
 
     const Model = ModelBase.extend({
       constructor: function constructor() {
@@ -29,7 +29,7 @@ const GenerateDefaultModel = knex => {
     Object.defineProperty(Model, 'displayName', { value: displayName });
     Object.defineProperty(Model, 'schema', { value: schema });
 
-    debug(`Model ${displayName} created.`);
+    info(`Model ${displayName} created.`);
 
     return bookshelf.model(displayName, Model);
   }, s => s.title);

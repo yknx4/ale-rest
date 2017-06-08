@@ -20,7 +20,7 @@ function createObjectType(
   // debug(fieldsData);
   const fields = asFn(fieldsData);
   return new GraphQLObjectType({
-    name: `${name}ObjectType`,
+    name,
     description,
     fields,
     interfaces: [graphqlInterface],
