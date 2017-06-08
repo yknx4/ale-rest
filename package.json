@@ -7,7 +7,7 @@
     "console": "babel-node",
     "prestart": "yarn && yarn db:migrate",
     "start": "DEBUG=knex*,ale* nodemon src/index.js --exec babel-node",
-    "pretest": "yarn && yarn db:migrate",
+    "pretest": "yarn && yarn db:test:prepare",
     "test": "jest --forceExit",
     "test:watch": "jest --watch",
     "prebuild": "nvm use",
