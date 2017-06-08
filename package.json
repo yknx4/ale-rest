@@ -5,7 +5,6 @@
   "main": "src/index.js",
   "scripts": {
     "console": "babel-node",
-    "prestart": "nvm use",
     "start": "nodemon src/index.js --exec babel-node",
     "pretest": "yarn && yarn db:migrate",
     "test": "jest --forceExit",
