@@ -67,16 +67,12 @@ describe('selectors', () => {
   });
 
   describe('resolveSingleElement', () => {
-    const where = jest.fn();
-    const fetchAll = jest.fn();
-    fetchAll.mockReturnValue(Promise.resolve([{}]));
-    where.mockReturnValue({ fetchAll });
-    const model = { where, schema: { primaryKey: 'id', title: 'Model' } };
-    const models = { Model: model };
+    let resolved;
+    beforeAll(async () => {
+      resolved = await create(User);
+    });
     it('should find model by id', async () => {
-      await resolveSingleElement(models, 'Model')(null, { id: 1 });
-      expect(where).toHaveBeenCalledWith('id', 'IN', [1]);
-      expect(fetchAll).toHaveBeenCalled();
+      await resolveSingleElement({ User }, 'User')(null, { id: resolved.id });
     });
   });
 

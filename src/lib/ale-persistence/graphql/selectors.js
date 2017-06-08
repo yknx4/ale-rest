@@ -31,10 +31,11 @@ const resolveCollection = (models: Object, name: string) => (
   const model = models[name];
   const { primaryKey } = model.schema;
   const finalOrder = order || [primaryKey];
-  return models[name]
+  return model
     .where(query)
     .orderBy(...finalOrder)
-    .fetchPage({ page, pageSize });
+    .fetchPage({ page, pageSize })
+    .then(r => getLoader(model).loadMany(r.models.map(e => e.id)));
 };
 
 const asFn = memoize(input => () => input);

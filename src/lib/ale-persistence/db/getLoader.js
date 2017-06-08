@@ -9,8 +9,10 @@ const getLoader = (Model: Function, key: string = ''): DataLoader => {
   loadersCache.get(compoundKey) == null && // eslint-disable-line no-unused-expressions
     loadersCache.set(
       compoundKey,
-      new DataLoader(keys =>
-        Model.where(Model.schema.primaryKey, 'IN', keys).fetchAll()
+      new DataLoader((keys: Array<any>): Promise<any> =>
+        Model.where(Model.schema.primaryKey, 'IN', keys)
+          .fetchAll()
+          .then(r => r.toArray())
       ),
       { ttl }
     );
