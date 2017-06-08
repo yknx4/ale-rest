@@ -1,6 +1,7 @@
-import { mapKeys, memoize, isString } from 'lodash';
-import { camel } from 'case';
+import { isString, mapKeys, memoize } from 'lodash';
 import plural from 'pluralize';
+import { camel } from 'case';
+import getLoader from '../db/getLoader';
 import logger from '~/logger'; // eslint-disable-line
 
 const { info } = logger();
@@ -22,7 +23,7 @@ const camelKey = (_, k: string): string => camel(k);
 const pluralKey = (_, k: string): string => plural(k);
 
 const resolveSingleElement = (models: Object, name: string) => (root, { id }) =>
-  models[name].findById(id);
+  getLoader(models[name]).load(id);
 const resolveCollection = (models: Object, name: string) => (
   root,
   { query = {}, order, page = 1, pageSize = 10 }

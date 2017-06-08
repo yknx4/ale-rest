@@ -1,24 +1,22 @@
 import {
-  GraphQLSchema,
-  GraphQLObjectType,
   GraphQLInterfaceType,
   GraphQLList,
+  GraphQLObjectType,
+  GraphQLSchema,
 } from 'graphql';
-
-import { mapValues, mapKeys, values } from 'lodash';
-
+import { mapKeys, mapValues, values } from 'lodash';
 import {
   camelKey,
   pluralKey,
-  resolveSingleElement,
   resolveCollection,
+  resolveSingleElement,
 } from './selectors';
+import { createInputType, createObjectType } from './generators';
 import {
   defaultInputFields,
-  modelInterfaceDefaults,
   elementQueryDefaults,
+  modelInterfaceDefaults,
 } from './types';
-import { createObjectType, createInputType } from './generators';
 
 function createGraphQlRootQuery(models: Object): GraphQLSchema {
   const typesMap = {};

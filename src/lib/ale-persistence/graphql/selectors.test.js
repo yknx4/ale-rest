@@ -67,12 +67,16 @@ describe('selectors', () => {
   });
 
   describe('resolveSingleElement', () => {
-    const finder = jest.fn();
-    const model = { findById: finder };
+    const where = jest.fn();
+    const fetchAll = jest.fn();
+    fetchAll.mockReturnValue(Promise.resolve([{}]));
+    where.mockReturnValue({ fetchAll });
+    const model = { where, schema: { primaryKey: 'id', title: 'Model' } };
     const models = { Model: model };
-    it('should find model by id', () => {
-      resolveSingleElement(models, 'Model')(null, { id: 1 });
-      expect(finder).toHaveBeenCalledWith(1);
+    it('should find model by id', async () => {
+      await resolveSingleElement(models, 'Model')(null, { id: 1 });
+      expect(where).toHaveBeenCalledWith('id', 'IN', [1]);
+      expect(fetchAll).toHaveBeenCalled();
     });
   });
 
