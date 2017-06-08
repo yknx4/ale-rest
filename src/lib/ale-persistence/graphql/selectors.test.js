@@ -1,11 +1,21 @@
+import '~/config/knex'; // eslint-disable-line
+
 import {
+  asFn,
+  camelKey,
+  getDescription,
   getOutputFromInstance,
   instanceToResult,
-  getDescription,
-  camelKey,
   pluralKey,
+  resolveCollection,
   resolveSingleElement,
 } from './selectors';
+
+import { User } from '~/models'; // eslint-disable-line
+import { exec } from 'shelljs'; // eslint-disable-line
+import { utils } from '~/lib/ale-persistence'; // eslint-disable-line
+
+const { test: { create } } = utils;
 
 describe('selectors', () => {
   const name = 'awesome name';
@@ -63,6 +73,27 @@ describe('selectors', () => {
     it('should find model by id', () => {
       resolveSingleElement(models, 'Model')(null, { id: 1 });
       expect(finder).toHaveBeenCalledWith(1);
+    });
+  });
+
+  describe('asFn', () => {
+    it('shoudl return a function that returns the input', () => {
+      const input = {};
+      const fn = asFn(input);
+      expect(fn()).toBe(input);
+    });
+  });
+
+  describe('resolveCollection', () => {
+    let resolved;
+    let count;
+    beforeAll(async () => {
+      await create(User);
+      count = await User.count();
+      resolved = await resolveCollection({ a: User }, 'a')(null, {});
+    });
+    it('should get the collection of Model (User)', () => {
+      expect(resolved.length).toEqual(parseInt(count, 10));
     });
   });
 });
