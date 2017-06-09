@@ -11,7 +11,8 @@
     "prettier.trailingComma": "es5",
     "prettier.jsxBracketSameLine": true,
     "docthis.inferTypesFromNames": true,
-    "sortImports.suppressWarnings": true,
     "npm-intellisense.scanDevDependencies": false,
-    "javascript.validate.enable": false
+    "javascript.validate.enable": false,
+    "prettier.semi": true,
+    "editor.formatOnSave": true
 }

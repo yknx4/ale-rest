@@ -1,7 +1,11 @@
 // Use this file as a starting point for your project's .eslintrc.
 // Copy this file, and add rule overrides as needed.
 {
-  "extends": ["airbnb", "prettier", "prettier/flowtype"],
+  "extends": [
+    "airbnb",
+    "prettier",
+    "prettier/flowtype"
+  ],
   "env": {
     "es6": true,
     "node": true,
@@ -13,5 +17,10 @@
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module"
+  },
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
   }
 }
