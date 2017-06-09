@@ -1,4 +1,8 @@
-[options]
+ [options]
 module.name_mapper='^{rootPathPrefix}/\(.*\)$' -> '<PROJECT_ROOT>{rootPathSuffix}/\1'
 module.name_mapper='^ale-persistence\(.*\)$' -> '<PROJECT_ROOT>/src/lib/ale-persistence\1'
 module.name_mapper='^logger' -> '<PROJECT_ROOT>/src/logger.js'
+unsafe.enable_getters_and_setters=true
+[ignore]
+.*/node_modules/.*
+.*\.test\.js
