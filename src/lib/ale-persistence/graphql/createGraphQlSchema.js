@@ -1,25 +1,25 @@
 // @flow
-import { GraphQLObjectType, GraphQLSchema } from "graphql";
-import { mapKeys, mapValues, values } from "lodash";
-import { info } from "logger";
+import { GraphQLObjectType, GraphQLSchema } from 'graphql';
+import { mapKeys, mapValues, values } from 'lodash';
+import { info } from 'logger';
 import {
   connectionDefinitions,
   connectionArgs,
   fromGlobalId,
-  toGlobalId
-} from "graphql-relay";
+  toGlobalId,
+} from 'graphql-relay';
 import {
   camelKey,
   pluralKey,
   // resolveCollection,
-  resolveSingleElement
-} from "./selectors";
-import { createObjectType } from "./generators";
-import { elementQueryDefaults } from "./types";
-import { nodeField, nodeInterface } from "./generators/nodeDefinitions";
-import { modelsProxy } from "../models";
-import Cursor from "../utils/Cursor";
-import { stringify64 } from "../utils/base64";
+  resolveSingleElement,
+} from './selectors';
+import { createObjectType } from './generators';
+import { elementQueryDefaults } from './types';
+import { nodeField, nodeInterface } from './generators/nodeDefinitions';
+import { modelsProxy } from '../models';
+import Cursor from '../utils/Cursor';
+import { stringify64 } from '../utils/base64';
 
 function createGraphQlRootQuery(models: { [string]: string }): GraphQLSchema {
   const typesMap = {};
@@ -33,7 +33,7 @@ function createGraphQlRootQuery(models: { [string]: string }): GraphQLSchema {
   let elementQueryFields = mapValues(typesMap, (v, name) => ({
     ...elementQueryDefaults,
     type: nodeInterface,
-    resolve: resolveSingleElement(name)
+    resolve: resolveSingleElement(name),
   }));
 
   elementQueryFields = mapKeys(elementQueryFields, camelKey);
@@ -50,13 +50,13 @@ function createGraphQlRootQuery(models: { [string]: string }): GraphQLSchema {
       const Model = modelsProxy[name];
       const {
         pagination,
-        results: resultsPromise
+        results: resultsPromise,
       } = await Model.rawQuery().paginate(page, limit);
       const {
         has_next_page: hasNextPage,
         has_previous_page: hasPreviousPage,
         first_page: firstPage,
-        last_page: lastPage
+        last_page: lastPage,
       } = pagination;
       info(pagination);
       const results = await resultsPromise;
@@ -65,22 +65,22 @@ function createGraphQlRootQuery(models: { [string]: string }): GraphQLSchema {
       const data = await Model.loader().loadMany(ids);
       const parsed = data.map(e => ({
         cursor: stringify64(cursorData.cursorFor(e)),
-        node: { attributes: mapKeys(e, camelKey) }
+        node: { attributes: mapKeys(e, camelKey) },
       }));
       return {
         edges: parsed,
         pageInfo: {
-          endCursor: toGlobalId("Page", lastPage),
-          startCursor: toGlobalId("Page", firstPage),
+          endCursor: toGlobalId('Page', lastPage),
+          startCursor: toGlobalId('Page', firstPage),
           hasNextPage,
-          hasPreviousPage
-        }
+          hasPreviousPage,
+        },
       };
       // info(a);
       // info(args);
       // info(req);
       // info(meta);
-    }
+    },
   }));
 
   collectionQueryFields = mapKeys(collectionQueryFields, camelKey);
@@ -89,17 +89,17 @@ function createGraphQlRootQuery(models: { [string]: string }): GraphQLSchema {
   const fields = () => ({
     ...elementQueryFields,
     ...collectionQueryFields,
-    node: nodeField
+    node: nodeField,
   });
 
   const queryType = new GraphQLObjectType({
-    name: "Query",
-    fields
+    name: 'Query',
+    fields,
   });
 
   return new GraphQLSchema({
     query: queryType,
-    types: values(typesMap)
+    types: values(typesMap),
   });
 }
 
