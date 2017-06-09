@@ -38,7 +38,7 @@ function createGraphQlRootQuery(models: { [string]: string }): GraphQLSchema {
       info(args);
       const { after, first } = args;
       let pagination;
-      const raw = await Model.rawQuery().paginate(after, first).then(r => {
+      const raw = await Model.rawQuery().fetch(after, first).then(r => {
         pagination = r.pagination;
         info(r.results);
         return r.results;

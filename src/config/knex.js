@@ -1,5 +1,6 @@
 import knex from 'knex';
 import knexConfig from '../../knexfile'; // eslint-disable-line
+import './knexFetch';
 import './knexPagination';
 
 const configPath =
