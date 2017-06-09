@@ -18,7 +18,7 @@ module.exports = {
       statements: 70
     }
   },
-  notify: true,
+  // notify: true,
   clearMocks: true,
   rootDir: "src",
   setupTestFrameworkScriptFile: "<rootDir>/../jest.setup.js"

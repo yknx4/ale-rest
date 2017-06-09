@@ -1170,15 +1170,15 @@ bytes@2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-2.4.0.tgz#7d97196f9d5baf7f6935e25985549edd2a6c2339"
 
+caching-map@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/caching-map/-/caching-map-1.0.2.tgz#8fab616b5ffdf11d958a20b5bfcaf7de7ddab6e8"
+
 caller-path@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/caller-path/-/caller-path-0.1.0.tgz#94085ef63581ecd3daa92444a8fe94e82577751f"
   dependencies:
     callsites "^0.2.0"
-
-caller@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/caller/-/caller-1.0.1.tgz#b851860f70e195db3d277395aa1a7e23ea30ecf5"
 
 callsite@^1.0.0:
   version "1.0.0"
@@ -1482,6 +1482,10 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+dataloader@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/dataloader/-/dataloader-1.3.0.tgz#6fec5be4b30a712e4afd30b86b4334566b97673b"
+
 date-fns@^1.27.2:
   version "1.28.5"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.28.5.tgz#257cfc45d322df45ef5658665967ee841cd73faf"
@@ -1500,13 +1504,13 @@ debug@2.2.0:
   dependencies:
     ms "0.7.1"
 
-debug@2.6.7:
+debug@2.6.7, debug@^2.1.3:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.7.tgz#92bad1f6d05bbb6bba22cca88bcd0ec894c2861e"
   dependencies:
     ms "2.0.0"
 
-debug@2.6.8, debug@^2.1.1, debug@^2.1.3, debug@^2.2.0, debug@^2.6.3, debug@^2.6.8:
+debug@2.6.8, debug@^2.1.1, debug@^2.2.0, debug@^2.6.3, debug@^2.6.8:
   version "2.6.8"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.8.tgz#e731531ca2ede27d188222427da17821d68ff4fc"
   dependencies:
@@ -2501,6 +2505,12 @@ hawk@~3.1.3:
     cryptiles "2.x.x"
     hoek "2.x.x"
     sntp "1.x.x"
+
+hide-stack-frames-from@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/hide-stack-frames-from/-/hide-stack-frames-from-1.0.0.tgz#5a4af45047391fc9cd79fce8af673d8b7463229f"
+  dependencies:
+    stack-chain "^1.3.0"
 
 hoek@2.x.x:
   version "2.16.3"
@@ -4749,6 +4759,10 @@ stable@0.1.6:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.6.tgz#910f5d2aed7b520c6e777499c1f32e139fdecb10"
 
+stack-chain@^1.3.0:
+  version "1.3.7"
+  resolved "https://registry.yarnpkg.com/stack-chain/-/stack-chain-1.3.7.tgz#d192c9ff4ea6a22c94c4dd459171e3f00cea1285"
+
 staged-git-files@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/staged-git-files/-/staged-git-files-0.0.4.tgz#d797e1b551ca7a639dec0237dc6eb4bb9be17d35"
@@ -4958,12 +4972,14 @@ tr46@~0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
 
-tracer@^0.8.9:
+tracerdebug@^0.8.9:
   version "0.8.9"
-  resolved "https://registry.yarnpkg.com/tracer/-/tracer-0.8.9.tgz#64bc88a116e35d76edad2315a0011eb5f11393a6"
+  resolved "https://registry.yarnpkg.com/tracerdebug/-/tracerdebug-0.8.9.tgz#47acc25be7f711b30634fe0e336b7fa4da3016cd"
   dependencies:
     colors "1.1.2"
     dateformat "2.0.0"
+    debug "^2.6.8"
+    lodash "^4.17.4"
     tinytim "0.1.1"
 
 trim-newlines@^1.0.0:

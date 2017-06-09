@@ -7,5 +7,9 @@ const { bookshelf } = defaultModel;
 
 const User = defaultModel(userSchema);
 
+const onlyModels = {
+  User,
+};
+
 export default models.modelsProxy(bookshelf);
-export { bookshelf, defaultModel, User }; // eslint-disable-line import/prefer-default-export
+export { bookshelf, defaultModel, onlyModels }; // eslint-disable-line import/prefer-default-export

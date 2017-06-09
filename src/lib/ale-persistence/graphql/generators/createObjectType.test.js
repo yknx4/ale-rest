@@ -21,7 +21,7 @@ describe('createObjectType', () => {
   const interfaceType = new GraphQLInterfaceType({ name: 'interface' });
 
   const expectedOutput = new GraphQLObjectType({
-    name: 'ModelObjectType',
+    name: 'Model',
     fields: asFn({
       prop: {
         type: jsonSchemaTypeToGraphQlType('string'),
@@ -51,8 +51,8 @@ describe('createObjectType', () => {
       )
     ).toEqual('Compared values have no visual difference.');
     expectedOutput._typeConfig.fields = result._typeConfig.fields; // eslint-disable-line
-    expect(result.toString()).toEqual('ModelObjectType');
-    expect(result.name).toEqual('ModelObjectType');
+    expect(result.toString()).toEqual('Model');
+    expect(result.name).toEqual('Model');
     expect(result.description).toEqual('My Model Schema');
     expect(result).toBeInstanceOf(GraphQLObjectType);
     expect(result).toEqual(expectedOutput);

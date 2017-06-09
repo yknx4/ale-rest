@@ -11,9 +11,11 @@ import {
   resolveSingleElement,
 } from './selectors';
 
-import { User } from '~/models'; // eslint-disable-line
+import models from '~/models'; // eslint-disable-line
 import { exec } from 'shelljs'; // eslint-disable-line
 import { utils } from '~/lib/ale-persistence'; // eslint-disable-line
+
+const { User } = models;
 
 const { test: { create } } = utils;
 
@@ -67,12 +69,12 @@ describe('selectors', () => {
   });
 
   describe('resolveSingleElement', () => {
-    const finder = jest.fn();
-    const model = { findById: finder };
-    const models = { Model: model };
-    it('should find model by id', () => {
-      resolveSingleElement(models, 'Model')(null, { id: 1 });
-      expect(finder).toHaveBeenCalledWith(1);
+    let resolved;
+    beforeAll(async () => {
+      resolved = await create(User);
+    });
+    it('should find model by id', async () => {
+      await resolveSingleElement({ User }, 'User')(null, { id: resolved.id });
     });
   });
 

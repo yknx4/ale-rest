@@ -1,9 +1,10 @@
-import { mapKeys, memoize, isString } from 'lodash';
-import { camel } from 'case';
+import { isString, mapKeys, memoize } from 'lodash';
 import plural from 'pluralize';
+import { camel } from 'case';
+import getLoader from '../db/getLoader';
 import logger from '~/logger'; // eslint-disable-line
 
-const { info } = logger();
+const { info } = logger;
 
 const instanceToResult = memoize(instance =>
   mapKeys(instance.attributes, (_, key) => camel(key))
@@ -22,7 +23,7 @@ const camelKey = (_, k: string): string => camel(k);
 const pluralKey = (_, k: string): string => plural(k);
 
 const resolveSingleElement = (models: Object, name: string) => (root, { id }) =>
-  models[name].findById(id);
+  getLoader(models[name]).load(id);
 const resolveCollection = (models: Object, name: string) => (
   root,
   { query = {}, order, page = 1, pageSize = 10 }
@@ -30,10 +31,11 @@ const resolveCollection = (models: Object, name: string) => (
   const model = models[name];
   const { primaryKey } = model.schema;
   const finalOrder = order || [primaryKey];
-  return models[name]
+  return model
     .where(query)
     .orderBy(...finalOrder)
-    .fetchPage({ page, pageSize });
+    .fetchPage({ page, pageSize })
+    .then(r => getLoader(model).loadMany(r.models.map(e => e.id)));
 };
 
 const asFn = memoize(input => () => input);

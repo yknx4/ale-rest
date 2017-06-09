@@ -1,7 +1,7 @@
 import stringify from 'json-stringify-safe';
 import logger from '~/logger'; // eslint-disable-line
 
-const { info } = logger();
+const { info } = logger;
 
 function validateWithSchema() {
   info(

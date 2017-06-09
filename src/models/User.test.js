@@ -1,7 +1,8 @@
-import { User } from './index';
+import models from './index';
 import { utils } from '~/lib/ale-persistence'; // eslint-disable-line
 
 const { test: { build } } = utils;
+const { User } = models;
 
 const validAttributes = () => build(User);
 
