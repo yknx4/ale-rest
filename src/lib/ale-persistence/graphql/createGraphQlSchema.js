@@ -1,17 +1,25 @@
-import { GraphQLObjectType, GraphQLSchema } from 'graphql';
-import { mapKeys, mapValues, values } from 'lodash';
-import { info } from 'logger';
-import { connectionDefinitions, connectionArgs } from 'graphql-relay';
+// @flow
+import { GraphQLObjectType, GraphQLSchema } from "graphql";
+import { mapKeys, mapValues, values } from "lodash";
+import { info } from "logger";
+import {
+  connectionDefinitions,
+  connectionArgs,
+  fromGlobalId,
+  toGlobalId
+} from "graphql-relay";
 import {
   camelKey,
   pluralKey,
   // resolveCollection,
-  resolveSingleElement,
-} from './selectors';
-import { createObjectType } from './generators';
-import { elementQueryDefaults } from './types';
-import { nodeField, nodeInterface } from './generators/nodeDefinitions';
-import { modelsProxy } from '../models';
+  resolveSingleElement
+} from "./selectors";
+import { createObjectType } from "./generators";
+import { elementQueryDefaults } from "./types";
+import { nodeField, nodeInterface } from "./generators/nodeDefinitions";
+import { modelsProxy } from "../models";
+import Cursor from "../utils/Cursor";
+import { stringify64 } from "../utils/base64";
 
 function createGraphQlRootQuery(models: { [string]: string }): GraphQLSchema {
   const typesMap = {};
@@ -25,7 +33,7 @@ function createGraphQlRootQuery(models: { [string]: string }): GraphQLSchema {
   let elementQueryFields = mapValues(typesMap, (v, name) => ({
     ...elementQueryDefaults,
     type: nodeInterface,
-    resolve: resolveSingleElement(name),
+    resolve: resolveSingleElement(name)
   }));
 
   elementQueryFields = mapKeys(elementQueryFields, camelKey);
@@ -34,37 +42,45 @@ function createGraphQlRootQuery(models: { [string]: string }): GraphQLSchema {
     type: connectionsMap[name].connectionType,
     args: connectionArgs,
     async resolve(ctx, args) {
+      info(fromGlobalId(args.after));
+      const cursorData = new Cursor();
+      cursorData.relayPagination = args;
+      const { page, limit } = cursorData.cursor;
+      info(cursorData.cursor);
       const Model = modelsProxy[name];
-      info(args);
-      const { after, first } = args;
-      let pagination;
-      const raw = await Model.rawQuery().fetch(after, first).then(r => {
-        pagination = r.pagination;
-        info(r.results);
-        return r.results;
-      });
+      const {
+        pagination,
+        results: resultsPromise
+      } = await Model.rawQuery().paginate(page, limit);
+      const {
+        has_next_page: hasNextPage,
+        has_previous_page: hasPreviousPage,
+        first_page: firstPage,
+        last_page: lastPage
+      } = pagination;
       info(pagination);
-      const ids = raw.map(e => e.id);
+      const results = await resultsPromise;
+      const ids = results.map(e => e.id);
       info(ids);
       const data = await Model.loader().loadMany(ids);
       const parsed = data.map(e => ({
-        cursor: e.id,
-        node: e,
+        cursor: stringify64(cursorData.cursorFor(e)),
+        node: { attributes: mapKeys(e, camelKey) }
       }));
       return {
         edges: parsed,
         pageInfo: {
-          endCursor: JSON.stringify(pagination),
-          startCursor: JSON.stringify(pagination),
-          hasNextPage: true,
-          hasPreviousPage: true,
-        },
+          endCursor: toGlobalId("Page", lastPage),
+          startCursor: toGlobalId("Page", firstPage),
+          hasNextPage,
+          hasPreviousPage
+        }
       };
       // info(a);
       // info(args);
       // info(req);
       // info(meta);
-    },
+    }
   }));
 
   collectionQueryFields = mapKeys(collectionQueryFields, camelKey);
@@ -73,17 +89,17 @@ function createGraphQlRootQuery(models: { [string]: string }): GraphQLSchema {
   const fields = () => ({
     ...elementQueryFields,
     ...collectionQueryFields,
-    node: nodeField,
+    node: nodeField
   });
 
   const queryType = new GraphQLObjectType({
-    name: 'Query',
-    fields,
+    name: "Query",
+    fields
   });
 
   return new GraphQLSchema({
     query: queryType,
-    types: values(typesMap),
+    types: values(typesMap)
   });
 }
 

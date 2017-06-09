@@ -1,11 +1,11 @@
-import { GraphQLObjectType } from 'graphql';
-import { mapValues, mapKeys } from 'lodash';
-import { info } from 'logger'; // eslint-ignore-line
-import { typesStore } from 'ale-persistence/store';
-import { camelKey, asFn } from '../selectors';
-import { generateField } from './index';
-import { nodeInterface } from './nodeDefinitions';
-import modelProxy from '../../models/modelsProxy';
+import { GraphQLObjectType } from "graphql";
+import { mapValues, mapKeys } from "lodash";
+import { info } from "logger"; // eslint-ignore-line
+import { typesStore } from "ale-persistence/store";
+import { camelKey, asFn } from "../selectors";
+import { generateField } from "./index";
+import { nodeInterface } from "./nodeDefinitions";
+import modelProxy from "../../models/modelsProxy";
 
 function createObjectType(modelName: string): GraphQLObjectType {
   const model = modelProxy[modelName];
@@ -21,7 +21,7 @@ function createObjectType(modelName: string): GraphQLObjectType {
     name,
     description,
     fields,
-    interfaces: [nodeInterface],
+    interfaces: [nodeInterface]
   });
   typesStore[name] = newType;
   return newType;
