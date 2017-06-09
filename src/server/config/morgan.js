@@ -1,7 +1,5 @@
 /* eslint import/no-unresolved: [2, { ignore: ['^~/'] }]*/
-import logger from '~/logger'; // eslint-disable-line import/extensions
-
-const { info } = logger;
+import { info } from 'logger'; // eslint-disable-line import/extensions
 
 export default {
   buffer: false,

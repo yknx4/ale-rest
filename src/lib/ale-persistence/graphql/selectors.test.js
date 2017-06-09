@@ -1,5 +1,3 @@
-import '~/config/knex'; // eslint-disable-line
-
 import {
   asFn,
   camelKey,
@@ -11,9 +9,9 @@ import {
   resolveSingleElement,
 } from './selectors';
 
-import models from '~/models'; // eslint-disable-line
+import models from '/models'; // eslint-disable-line
 import { exec } from 'shelljs'; // eslint-disable-line
-import { utils } from '~/lib/ale-persistence'; // eslint-disable-line
+import { utils } from 'ale-persistence'; // eslint-disable-line
 
 const { User } = models;
 

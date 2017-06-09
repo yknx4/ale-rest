@@ -1,9 +1,18 @@
-import { dropRight } from 'lodash';
+import { dropRight, isString } from 'lodash';
 import tracerdebug from 'tracerdebug';
 
 const path = dropRight(__dirname.split('/'), 2).join('/');
 
+const { DEBUG, LOG, DEBUG_LOG } = process.env;
+
+const level = isString(DEBUG) && DEBUG.includes('ale')
+  ? DEBUG_LOG || 'log'
+  : LOG || 'info';
+
+console.log(`Log Level: ${level}`); // eslint-disable-line no-console
+
 const logger = tracerdebug.colorConsole({
+  level,
   format: [
     '{{timestamp}} {{path}}:{{line}} <{{title}}> {{message}}',
     {
@@ -21,4 +30,9 @@ const logger = tracerdebug.colorConsole({
     }
   },
 });
+
+const { log, trace, debug, info, warn, error } = logger;
+
 export default logger;
+
+export { log, trace, debug, info, warn, error };

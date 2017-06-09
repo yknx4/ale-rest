@@ -14,4 +14,4 @@ function create(model: Function): Promise<any> {
   return model.create(build(model));
 }
 
-export { build, create }; // eslint-disable-line
+export { build, create };

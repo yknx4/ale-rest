@@ -1,3 +1,2 @@
-import 'dotenv/config';
-import './config/knex';
+import './init';
 import './server';
