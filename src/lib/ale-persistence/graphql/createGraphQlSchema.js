@@ -65,7 +65,7 @@ function createGraphQlRootQuery(models: { [string]: string }): GraphQLSchema {
       const data = await Model.loader().loadMany(ids);
       const parsed = data.map(e => ({
         cursor: stringify64(cursorData.cursorFor(e)),
-        node: { attributes: mapKeys(e, camelKey) },
+        node: mapKeys(e, camelKey),
       }));
       return {
         edges: parsed,

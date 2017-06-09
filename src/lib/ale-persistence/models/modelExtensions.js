@@ -23,4 +23,11 @@ function validateSaveSchema() {
   return this.validateWithSchema().then(rejectIfInvalid);
 }
 
-export { validateWithSchema, validateSaveSchema };
+async function fromDbResult(result) {
+  const data = await result;
+  const collection = this.collection();
+  collection._handleResponse(data); // eslint-disable-line no-underscore-dangle
+  return collection;
+}
+
+export { validateWithSchema, validateSaveSchema, fromDbResult };

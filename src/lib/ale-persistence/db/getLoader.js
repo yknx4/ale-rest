@@ -11,9 +11,12 @@ const getLoader = (modelName: string, key: string = ''): DataLoader => {
   loadersCache.get(compoundKey) == null && // eslint-disable-line no-unused-expressions
     loadersCache.set(
       compoundKey,
-      new DataLoader((keys: Array<any>) =>
-        Model.rawQuery().where(Model.schema.primaryKey, 'IN', keys)
-      ),
+      new DataLoader(async (keys: Array<any>) => {
+        const collection = await Model.fromDbResult(
+          Model.rawQuery().where(Model.schema.primaryKey, 'IN', keys)
+        );
+        return collection.toArray();
+      }),
       { ttl }
     );
   return loadersCache.get(compoundKey);

@@ -1,8 +1,13 @@
+// @flow
 import { memoize } from 'lodash';
 import { info } from 'logger';
 import { libState } from 'ale-persistence/store';
 import ajv from '../config/ajv';
-import { validateWithSchema, validateSaveSchema } from './modelExtensions';
+import {
+  validateWithSchema,
+  validateSaveSchema,
+  fromDbResult,
+} from './modelExtensions';
 import getLoader from '../db/getLoader';
 
 const { bookshelf } = libState;
@@ -34,6 +39,7 @@ const generateModel = memoize((schema: Object): Function => {
   Object.defineProperty(Model, 'rawQuery', {
     value: () => bookshelf.knex(tableName),
   });
+  Object.defineProperty(Model, 'fromDbResult', { value: fromDbResult });
 
   info(`Model ${displayName} created.`);
 
