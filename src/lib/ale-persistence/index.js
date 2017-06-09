@@ -1,5 +1,5 @@
-import GenerateDefaultModel, * as models from './models';
+import generateModel, * as models from './models';
 import * as utils from './utils';
 import * as graphql from './graphql';
 
-export { GenerateDefaultModel, utils, graphql, models };
+export { generateModel, utils, graphql, models };

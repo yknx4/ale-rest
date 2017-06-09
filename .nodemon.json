@@ -1,0 +1,8 @@
+{
+  "verbose": false,
+  "ext": "*.js",
+  "ignore": [
+    "src/**/*.test.js"
+  ],
+  "delay": "2500"
+}
