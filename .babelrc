@@ -8,9 +8,13 @@
           "node": "current"
         }
       }
-    ]
+    ],
+    "stage-2",
+    "react",
+    "flow"
   ],
   "plugins": [
+    "transform-decorators-legacy",
     "lodash",
     "closure-elimination",
     "transform-object-rest-spread",
@@ -37,8 +41,7 @@
         "annotate": true
       }
     ],
-    "syntax-flow",
-    "transform-flow-strip-types"
+    "syntax-flow"
   ],
   "env": {
     "production": {

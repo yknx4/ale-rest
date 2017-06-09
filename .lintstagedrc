@@ -1,5 +1,6 @@
 {
   "src/**/*.js": [
+      "flow",
       "prettier --write --trailing-comma es5 --single-quote",
       "eslint --fix",
       "jsinspect",
