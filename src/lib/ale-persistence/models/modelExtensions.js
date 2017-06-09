@@ -1,5 +1,8 @@
 import stringify from 'json-stringify-safe';
 import { info } from 'logger';
+import { mapKeys } from 'lodash';
+import { stringify64 } from '../utils/base64';
+import { camelKey } from '../graphql/selectors';
 
 function validateWithSchema() {
   info(
@@ -30,4 +33,12 @@ async function fromDbResult(result) {
   return collection;
 }
 
-export { validateWithSchema, validateSaveSchema, fromDbResult };
+function toNode(cursorData) {
+  const { attributes } = this;
+  return {
+    cursor: stringify64(cursorData.cursorFor(attributes)),
+    node: mapKeys(attributes, camelKey),
+  };
+}
+
+export { validateWithSchema, validateSaveSchema, fromDbResult, toNode };

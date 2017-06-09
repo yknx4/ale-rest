@@ -3,6 +3,13 @@ import { reduce, pick } from 'lodash';
 import { getPagingParameters } from 'relay-cursor-paging';
 import { fromGlobalId } from 'graphql-relay';
 import { stringify64 } from './base64';
+import {
+  paginable,
+  orderArrayType,
+  stringMap,
+  pageGlobalId,
+  cursoreable,
+} from '../types';
 
 const direction = (input: string): string =>
   input[0] === '-' ? 'DESC' : 'ASC';
@@ -21,26 +28,11 @@ function getOrderMap(orderArray: Array<string>): { [string]: string } {
   );
 }
 
-type paginable = {
-  before: ?string,
-  last: ?number,
-  after: ?string,
-  first: ?number,
-};
-
-type idType = string | number;
-
-type orderArray = Array<string>;
-type stringMap = { [string]: string };
-type pageType = 'Page';
-type pageGlobalId = { type: pageType, id: idType };
-type cursoreable = { id: idType };
-
 const array = (input): Array<string> =>
   Array.isArray(input) ? input : [input];
 
 class Cursor {
-  $orderBy: orderArray;
+  $orderBy: orderArrayType;
   $limit: ?number;
   $offset: ?number;
   $page: ?number;

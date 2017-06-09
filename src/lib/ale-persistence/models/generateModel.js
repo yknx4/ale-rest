@@ -7,6 +7,7 @@ import {
   validateWithSchema,
   validateSaveSchema,
   fromDbResult,
+  toNode,
 } from './modelExtensions';
 import getLoader from '../db/getLoader';
 
@@ -28,6 +29,7 @@ const generateModel = memoize((schema: Object): Function => {
     schema,
     validateWithSchema,
     validateSaveSchema,
+    toNode,
     type: displayName,
   });
 
