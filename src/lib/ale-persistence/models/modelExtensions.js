@@ -1,8 +1,6 @@
-import stringify from 'json-stringify-safe';
-import { info } from 'logger';
-import { mapKeys } from 'lodash';
-import { stringify64 } from '../utils/base64';
-import { camelKey } from '../graphql/selectors';
+import stringify from "json-stringify-safe";
+import { info } from "logger";
+import { stringify64 } from "../utils/base64";
 
 function validateWithSchema() {
   info(
@@ -17,7 +15,7 @@ function validateWithSchema() {
 
 function rejectIfInvalid(valid: boolean): Promise<any> {
   if (!valid) {
-    return Promise.reject(new Error('Invalid Object'));
+    return Promise.reject(new Error("Invalid Object"));
   }
   return Promise.resolve();
 }
@@ -27,17 +25,17 @@ function validateSaveSchema() {
 }
 
 async function fromDbResult(result) {
+  info(result);
   const data = await result;
   const collection = this.collection();
   collection._handleResponse(data); // eslint-disable-line no-underscore-dangle
   return collection;
 }
 
-function toNode(cursorData) {
-  const { attributes } = this;
+function toNode(cursorData, index, total) {
   return {
-    cursor: stringify64(cursorData.cursorFor(attributes)),
-    node: mapKeys(attributes, camelKey),
+    cursor: stringify64(cursorData.offsetCursor(index, total)),
+    node: this
   };
 }
 

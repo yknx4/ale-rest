@@ -1,12 +1,13 @@
 // @flow
-import { isString, mapKeys, memoize } from 'lodash';
-import { trace } from 'logger';
-import plural from 'pluralize';
-import { camel } from 'case';
-import { modelsProxy as models } from 'ale-persistence/models';
-import { toGlobalId } from 'graphql-relay';
-import Cursor from '../utils/Cursor';
-import { paginable, idType } from '../types';
+import { isString, mapKeys, memoize } from "lodash";
+import { trace, info } from "logger";
+import plural from "pluralize";
+import { camel } from "case";
+import { modelsProxy as models } from "ale-persistence/models";
+import { toGlobalId } from "graphql-relay";
+import Cursor from "../utils/Cursor";
+import { paginable, idType, paginationType } from "../types";
+import { stringify64 } from "../utils/base64";
 
 const instanceToResult = memoize((instance): { [string]: any } =>
   mapKeys(instance.attributes, (_, key) => camel(key))
@@ -24,7 +25,7 @@ function getOutputFromInstance(
 }
 
 const getDescription = (description: ?string): string =>
-  isString(description) ? description : 'Missing Description';
+  isString(description) ? description : "Missing Description";
 
 const camelKey = (_: any, k: string): string => camel(k);
 const pluralKey = (_: any, k: string): string => plural(k);
@@ -37,32 +38,39 @@ const resolveCollection = (name: string) => async (
   ctx: any,
   args: paginable
 ) => {
-  const cursorData = new Cursor();
-  cursorData.relayPagination = args;
-  const { page, limit } = cursorData.cursor;
-  const Model = models[name];
+  const cursorData = new Cursor(args);
+  const { page, limit, relativePosition } = cursorData;
+  const Model: Function = models[name];
+  info(`page ${page} limit ${limit} rpos ${relativePosition}`);
   const {
     pagination,
-    results: resultsPromise,
-  } = await Model.rawQuery().paginate(page, limit);
+    results: resultsPromise
+  }: {
+    pagination: paginationType,
+    results: any
+  } = await Model.rawQuery().paginate(page, limit, relativePosition);
   const {
     has_next_page: hasNextPage,
     has_previous_page: hasPreviousPage,
-    first_page: firstPage,
-    last_page: lastPage,
+    total_pages: lastPage,
+    total_results: total
   } = pagination;
   const results = await resultsPromise;
   const ids = results.map(e => e.id);
   const data = await Model.loader().loadMany(ids);
-  const parsed = data.map(e => e.toNode(cursorData));
+  const parsed = data.map((e: any, i: number): any =>
+    e.toNode(cursorData, i + (1 || relativePosition), total)
+  );
+  info(parsed);
+  info(pagination);
   return {
     edges: parsed,
     pageInfo: {
-      endCursor: toGlobalId('Page', lastPage),
-      startCursor: toGlobalId('Page', firstPage),
+      endCursor: stringify64(cursorData.cursorForPage(lastPage, limit, total)),
+      startCursor: stringify64(cursorData.cursorForPage(1, 1, total)),
       hasNextPage,
-      hasPreviousPage,
-    },
+      hasPreviousPage
+    }
   };
 };
 
@@ -76,5 +84,5 @@ export {
   resolveSingleElement,
   resolveCollection,
   instanceToResult,
-  asFn,
+  asFn
 };

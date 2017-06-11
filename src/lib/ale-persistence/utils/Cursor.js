@@ -1,26 +1,72 @@
 // @flow
-import { reduce, pick } from 'lodash';
-import { getPagingParameters } from 'relay-cursor-paging';
-import { fromGlobalId } from 'graphql-relay';
-import { stringify64 } from './base64';
+import { info } from "logger";
+import { reduce, isNil, omitBy } from "lodash";
+import { getPagingParameters } from "relay-cursor-paging";
+import { fromGlobalId, toGlobalId } from "graphql-relay";
+import Paginator from "paginator";
+import { stringify64, parse64 } from "./base64";
 import {
   paginable,
   orderArrayType,
   stringMap,
-  pageGlobalId,
   cursoreable,
-} from '../types';
+  anyMap
+} from "../types";
+
+const LINKS_DISPLAYED = 1;
+
+// Arguments are `total_results` and `current_page`. I hope these are self
+// explanatory.
+// const pagination_info = paginator.build(10000, 50);
+
+type cursorType = {
+  orderBy: orderArrayType,
+  pos: number,
+  total: ?number
+};
+
+type queryParameters = {
+  orderBy: orderArrayType,
+  limit: number,
+  pos: number,
+  total: ?number
+};
+
+type toBeStringArray = string | Array<string>;
+
+function inArray(input: toBeStringArray): Array<string> {
+  return Array.isArray(input) ? input : [input];
+}
+
+const encodedData = ({ after, before }: paginable): ?string => after || before;
+const encodedLimit = ({ first, last }: paginable): number =>
+  first || last || 10;
+function getDataFromParameters(args: paginable): queryParameters {
+  const result = {
+    limit: encodedLimit(args),
+    orderBy: ["id"],
+    pos: 0
+  };
+  info(`Default ${stringify64(result)}`);
+  const cursorData: ?string = encodedData(args);
+  info(`Cursor ${cursorData}`);
+  if (cursorData != null) {
+    Object.assign(result, parse64(cursorData));
+  }
+  info(`Result: ${stringify64(result)}`);
+  return result;
+}
 
 const direction = (input: string): string =>
-  input[0] === '-' ? 'DESC' : 'ASC';
+  input[0] === "-" ? "DESC" : "ASC";
 
 const key = (input: string): string =>
-  input[0] === '-' ? input.substr(1) : input;
+  input[0] === "-" ? input.substr(1) : input;
 
-function getOrderMap(orderArray: Array<string>): { [string]: string } {
+function getOrderMap(orderArray: orderArrayType): stringMap {
   return reduce(
     orderArray,
-    (a, v) => {
+    (a, v: string) => {
       a[key(v)] = direction(v); // eslint-disable-line no-param-reassign
       return a;
     },
@@ -28,70 +74,87 @@ function getOrderMap(orderArray: Array<string>): { [string]: string } {
   );
 }
 
-const array = (input): Array<string> =>
-  Array.isArray(input) ? input : [input];
+function getOrderArray(orderMap: stringMap): orderArrayType {
+  return reduce(
+    orderMap,
+    (a: orderArrayType, v: string, k: string): orderArrayType => {
+      let order = v === "DESC" ? "-" : "";
+      order += k;
+      a.push(order);
+      return a;
+    },
+    []
+  );
+}
 
 class Cursor {
-  $orderBy: orderArrayType;
-  $limit: ?number;
-  $offset: ?number;
-  $page: ?number;
-  $orderBy = ['id'];
+  $orderBy: stringMap;
+  $limit: number;
+  $pos: number;
+  $rpos: number;
+  $paginator: any;
 
-  set orderBy(order: Array<string> | string): void {
-    this.$orderBy = array(order);
-  }
-
-  get orderMap(): stringMap {
-    return getOrderMap(this.$orderBy);
-  }
-
-  set relayPagination(args: paginable) {
-    const { after, before } = args;
-    const globalId = after || before;
-    if (globalId == null) {
-      throw new TypeError('Invalid arguments');
-    }
-    const { id: page }: pageGlobalId = fromGlobalId((globalId: string));
-    const { limit, offset } = getPagingParameters(args);
-    this.$page = parseInt(page, 10);
+  constructor(args: paginable) {
+    info(`Decoding ${stringify64(args)}`);
+    const { orderBy, limit, pos }: queryParameters = getDataFromParameters(
+      args
+    );
+    this.$orderBy = getOrderMap(orderBy);
     this.$limit = limit;
-    this.$offset = offset;
+    this.$pos = pos;
+    this.$rpos = this.$pos % limit;
+
+    info(`limit ${limit} page ${pos / limit} rpos ${this.$rpos}`);
+    this.$paginator = new Paginator(limit, LINKS_DISPLAYED);
+    info(limit);
   }
 
-  get limit(): ?number {
+  get page(): number {
+    const { $pos, $limit } = this;
+    const page = Math.ceil(($pos + 1) / $limit);
+    return page < 1 ? 1 : page;
+  }
+
+  get limit(): number {
     return this.$limit;
   }
 
-  get offset(): ?number {
-    return this.$offset;
+  get relativePosition(): number {
+    return this.$rpos;
   }
 
-  get page(): ?number {
-    return this.$page;
+  get currentCursor(): cursorType {
+    const { $orderBy, $pos } = this;
+    return omitBy(
+      {
+        orderBy: getOrderArray($orderBy),
+        pos: $pos,
+        total: null
+      },
+      isNil
+    );
   }
 
-  get cursor(): any {
-    const { orderMap, limit, offset, page } = this;
+  offsetCursor(offset: number, total: ?number): cursorType {
+    const current: cursorType = (Object.assign(
+      { total },
+      this.currentCursor
+    ): cursorType);
+    current.pos += offset;
+    return omitBy(current, isNil);
+  }
+
+  cursorForPage(
+    page: number,
+    relativePosition: number = 0,
+    total: ?number
+  ): cursorType {
+    const { $orderBy, $limit } = this;
     return {
-      page,
-      orderMap,
-      limit,
-      offset,
+      orderBy: getOrderArray($orderBy),
+      pos: page * $limit + (relativePosition - $limit),
+      total
     };
-  }
-
-  cursorFor(input: cursoreable): cursoreable {
-    const { id } = input;
-    const attrs = pick(input, Object.keys(this.orderMap));
-    return {
-      id,
-      ...attrs,
-    };
-  }
-
-  toString() {
-    return stringify64(this.cursor);
   }
 }
 

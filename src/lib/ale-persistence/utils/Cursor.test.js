@@ -1,48 +1,53 @@
-import { toGlobalId } from 'graphql-relay';
-import Cursor from './Cursor';
+import { toGlobalId } from "graphql-relay";
+import Cursor from "./Cursor";
 
-const argsFor = { after: toGlobalId('Page', '1'), first: 5 };
-const argsBack = { before: toGlobalId('Page', '10'), last: 5 };
+const afterBefore = JSON.stringify({
+  orderBy: ["id", "-created_at"],
+  pos: 1470
+});
 
-describe('Cursor', () => {
+const pagination = {
+  total_pages: 334,
+  current_page: 50,
+  first_page: 46,
+  last_page: 53,
+  previous_page: 49,
+  next_page: 51,
+  has_previous_page: true,
+  has_next_page: true,
+  total_results: 10000,
+  results: 30,
+  first_result: 1470,
+  last_result: 1499
+};
+
+const { first_result } = pagination;
+
+const argsFor = { after: afterBefore, first: 30 };
+const argsBack = { before: afterBefore, last: 30 };
+
+describe("Cursor", () => {
   let cursor;
-  beforeEach(() => {
-    cursor = new Cursor();
-    cursor.orderBy = ['id', '-created_at'];
+
+  it("should match", () => {
+    const expected = { orderBy: ["id", "-created_at"], pos: 1470 };
+
+    cursor = new Cursor(argsFor);
+
+    expect(cursor.currentCursor).toEqual(expected);
   });
 
-  it('should match forwards', () => {
-    const expected = {
-      limit: 5,
-      offset: 2,
-      orderMap: { created_at: 'DESC', id: 'ASC' },
-      page: 1,
-    };
-    cursor.relayPagination = argsFor;
+  // it("should generate a cursor for an object", () => {
+  //   const object = {
+  //     id: "5",
+  //     created_at: "11/12/94",
+  //     another: "ignored"
+  //   };
+  //   cursor = new Cursor(argsFor);
+  //   cursor.orderBy = order;
 
-    expect(cursor.cursor).toEqual(expected);
-  });
-
-  it('should match backwards', () => {
-    const expected = {
-      limit: 5,
-      offset: 5,
-      orderMap: { created_at: 'DESC', id: 'ASC' },
-      page: 10,
-    };
-    cursor.relayPagination = argsBack;
-
-    expect(cursor.cursor).toEqual(expected);
-  });
-
-  it('should generate a cursor for an object', () => {
-    const object = {
-      id: '5',
-      created_at: '11/12/94',
-      another: 'ignored',
-    };
-    const singleCursor = cursor.cursorFor(object);
-    expect(object).toMatchObject(singleCursor);
-    expect(singleCursor).not.toHaveProperty('another');
-  });
+  //   const singleCursor = cursor.cursorFor(object);
+  //   expect(object).toMatchObject(singleCursor);
+  //   expect(singleCursor).not.toHaveProperty("another");
+  // });
 });

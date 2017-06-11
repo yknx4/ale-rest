@@ -1,8 +1,7 @@
-import models, { defaultModel } from './index';
-import userSchema from './User.json';
+import models, { onlyModels } from "./index";
 
-describe('index proxy', () => {
-  it('should retrieve User model from proxy', () => {
-    expect(models.User).toEqual(defaultModel(userSchema)); // eslint-disable-line
+describe("index proxy", () => {
+  it("should retrieve User model from proxy", () => {
+    expect(models.User).toEqual(onlyModels.User); // eslint-disable-line
   });
 });

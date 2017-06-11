@@ -1,5 +1,5 @@
 module.exports = {
-  verbose: true,
+  verbose: false,
   bail: true,
   collectCoverage: true,
   collectCoverageFrom: [
@@ -7,7 +7,7 @@ module.exports = {
     "!**/node_modules/**",
     "!**/vendor/**",
     "!src/**/index.js",
-    "!src/**/config/*.js",
+    "!src/**/config/*.js"
   ],
   coverageDirectory: "../coverage",
   coverageThreshold: {

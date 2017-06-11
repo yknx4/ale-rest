@@ -4,6 +4,9 @@
     [
       "env",
       {
+        "exclude": [
+          "transform-async-to-generator"
+        ],
         "targets": {
           "node": "current"
         }
@@ -41,23 +44,11 @@
         "annotate": true
       }
     ],
-    "syntax-flow"
+    "syntax-flow",
+    "inline-json-import"
   ],
   "env": {
     "production": {
-      "presets": [
-        [
-          "env",
-          {
-            "exclude": [
-              "transform-async-to-generator"
-            ],
-            "targets": {
-              "node": "current"
-            }
-          }
-        ]
-      ],
       "ignore": [
         "**/*.test.js",
         "**/node_modules/*.js"
@@ -73,7 +64,6 @@
         "fast-async",
         "transform-property-literals",
         "transform-node-env-inline",
-        "inline-json-import",
         "transform-simplify-comparison-operators",
         "inline-dotenv",
         "transform-inline-environment-variables",

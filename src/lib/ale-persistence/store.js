@@ -1,10 +1,12 @@
-import { trace, error } from 'logger'; // eslint-ignore-line
+import { trace, error } from "logger"; // eslint-ignore-line
+import { isString } from "lodash";
 
 const grapqhlObjectTypes = new Map();
 const state = new Map();
 
 const storeProxyHandler = {
   get(instance, name) {
+    if (!isString(name)) return instance[name];
     trace(`Fetching ${name}`);
     if (!instance.has(name)) {
       error(Object.keys(instance));
@@ -19,7 +21,7 @@ const storeProxyHandler = {
     trace(`Setting ${name}`);
     instance.set(name, value);
     return true;
-  },
+  }
 };
 
 const typesStore = new Proxy(grapqhlObjectTypes, storeProxyHandler);
