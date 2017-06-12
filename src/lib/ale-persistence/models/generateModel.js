@@ -1,13 +1,13 @@
 // @flow
-import { memoize, isString, mapKeys } from "lodash";
-import { info, log } from "logger";
-import { libModels } from "ale-persistence/store";
-import { Model } from "objection";
-import invariant from "invariant";
-import { camel, snake } from "case";
-import type { JSON$Schema } from "../types";
-import getLoader from "../db/getLoader";
-import { toNode } from "./modelExtensions";
+import { memoize, isString, mapKeys } from 'lodash';
+import { info, log } from 'logger';
+import { libModels } from 'ale-persistence/store';
+import { Model } from 'objection';
+import invariant from 'invariant';
+import { camel, snake } from 'case';
+import type { JSON$Schema } from '../types';
+import getLoader from '../db/getLoader';
+import { toNode } from './modelExtensions';
 
 log(`generateModel.js`);
 
@@ -20,7 +20,7 @@ const getSchema = (input: isSchema): JSON$Schema =>
   Object.freeze(isString(input) ? JSON.parse(input) : input);
 
 function generateModelFromSchema(schemaInput: isSchema): () => Model {
-  invariant(schemaInput, "You should include a schema");
+  invariant(schemaInput, 'You should include a schema');
   const schema: JSON$Schema = getSchema(schemaInput);
   const { title, tableName }: JSON$Schema = schema;
   info(`Creating Model ${title}`);
@@ -51,9 +51,9 @@ function generateModelFromSchema(schemaInput: isSchema): () => Model {
     }
   };
 
-  Object.defineProperty(klass, "name", { value: title });
-  Object.defineProperty(klass, "loader", {
-    value: getLoader.bind(null, "User")
+  Object.defineProperty(klass, 'name', { value: title });
+  Object.defineProperty(klass, 'loader', {
+    value: getLoader.bind(null, 'User'),
   });
   libModels[title] = klass;
   info(`Model ${title} created`);

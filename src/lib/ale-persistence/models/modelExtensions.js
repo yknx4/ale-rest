@@ -1,7 +1,7 @@
 /* @flow */
-import { trace, log } from "logger";
-import Cursor from "../utils/Cursor";
-import { stringify64 } from "../utils/base64";
+import { trace, log } from 'logger';
+import Cursor from '../utils/Cursor';
+import { stringify64 } from '../utils/base64';
 
 log(`modelExtensions.js`);
 
@@ -10,7 +10,7 @@ function toNode(cursorData: Cursor, index: number, total: ?number): node {
   trace(`Converting into GraphQL node`);
   return {
     cursor: stringify64(cursorData.offsetCursor(index, total)),
-    node: this
+    node: this,
   };
 }
 

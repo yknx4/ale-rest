@@ -1,14 +1,14 @@
 // @flow
-import { info, log } from "logger";
-import { reduce, isNil, omitBy } from "lodash";
-import Paginator from "paginator";
-import { stringify64, parse64 } from "./base64";
+import { info, log } from 'logger';
+import { reduce, isNil, omitBy } from 'lodash';
+import Paginator from 'paginator';
+import { stringify64, parse64 } from './base64';
 import type {
   paginable,
   orderArrayType,
   stringMap,
-  pagination
-} from "../types";
+  pagination,
+} from '../types';
 
 log(`Cursos.js`);
 
@@ -21,14 +21,14 @@ const LINKS_DISPLAYED = 1;
 type cursorType = {
   orderBy: orderArrayType,
   pos: number,
-  total: ?number
+  total: ?number,
 };
 
 type queryParameters = {
   orderBy: orderArrayType,
   limit: number,
   pos: number,
-  total: ?number
+  total: ?number,
 };
 
 type toBeStringArray = string | Array<string>;
@@ -43,9 +43,9 @@ const encodedLimit = ({ first, last }: paginable): number =>
 function getDataFromParameters(args: paginable): queryParameters {
   const result = {
     limit: encodedLimit(args),
-    orderBy: ["id"],
+    orderBy: ['id'],
     pos: 0,
-    total: null
+    total: null,
   };
   info(`Default ${stringify64(result)}`);
   const cursorData: ?string = encodedData(args);
@@ -58,10 +58,10 @@ function getDataFromParameters(args: paginable): queryParameters {
 }
 
 const direction = (input: string): string =>
-  input[0] === "-" ? "DESC" : "ASC";
+  input[0] === '-' ? 'DESC' : 'ASC';
 
 const key = (input: string): string =>
-  input[0] === "-" ? input.substr(1) : input;
+  input[0] === '-' ? input.substr(1) : input;
 
 function getOrderMap(orderArray: orderArrayType): stringMap {
   return reduce(
@@ -78,7 +78,7 @@ function getOrderArray(orderMap: stringMap): orderArrayType {
   return reduce(
     orderMap,
     (a: orderArrayType, v: string, k: string): orderArrayType => {
-      let order = v === "DESC" ? "-" : "";
+      let order = v === 'DESC' ? '-' : '';
       order += k;
       a.push(order);
       return a;
@@ -134,7 +134,7 @@ class Cursor {
       {
         orderBy: getOrderArray($orderBy),
         pos: $pos,
-        total: null
+        total: null,
       },
       isNil
     );
@@ -154,7 +154,7 @@ class Cursor {
     return {
       orderBy: getOrderArray($orderBy),
       pos,
-      total
+      total,
     };
   }
 }

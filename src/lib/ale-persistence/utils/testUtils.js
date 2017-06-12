@@ -1,9 +1,9 @@
 // @flow
-import { isString, mapValues, pickBy } from "lodash";
-import { fake } from "faker";
-import { models } from "ale-persistence";
-import { trace, log } from "logger";
-import type { Model as ModelType } from "objection";
+import { isString, mapValues, pickBy } from 'lodash';
+import { fake } from 'faker';
+import { models } from 'ale-persistence';
+import { trace, log } from 'logger';
+import type { Model as ModelType } from 'objection';
 
 log(`testUtils.js`);
 

@@ -4,7 +4,7 @@ export type paginable = {
   before: ?string,
   last: ?number,
   after: ?string,
-  first: ?number
+  first: ?number,
 };
 
 export type idType = string | number;
@@ -12,7 +12,7 @@ export type idType = string | number;
 export type orderArrayType = Array<string>;
 export type stringMap = { [string]: string };
 export type anyMap = { [string]: any };
-export type pageType = "Page";
+export type pageType = 'Page';
 export type pageGlobalId = { type: pageType, id: idType };
 export type cursoreable = { id: idType };
 export type promisedCollection = Promise<Array<any>>;
@@ -29,29 +29,29 @@ export type paginationType = {
   total_results: number,
   results: number,
   first_result: number,
-  last_result: number
+  last_result: number,
 };
 
 export type JSON$Pointer = {
-  $ref: string
+  $ref: string,
 };
 
 export type JSON$SchemaReference = JSON$Pointer;
 
 export type JSON$SchemaPrimitiveType =
-  | "array"
-  | "boolean"
-  | "integer"
-  | "null"
-  | "number"
-  | "object"
-  | "string";
+  | 'array'
+  | 'boolean'
+  | 'integer'
+  | 'null'
+  | 'number'
+  | 'object'
+  | 'string';
 
 export type JSON$SchemaFieldsCommon = {
   allOf?: JSON$Schema[],
   anyOf?: JSON$Schema[],
   definitions?: {
-    [keys: string]: JSON$Schema
+    [keys: string]: JSON$Schema,
   },
   description?: string,
   enum?: JSON$Value[],
@@ -59,101 +59,101 @@ export type JSON$SchemaFieldsCommon = {
   not?: JSON$Schema,
   oneOf?: JSON$Schema[],
   title?: string,
-  order?: number // FIXME: try to make this a parameter
+  order?: number, // FIXME: try to make this a parameter
 };
 
 export type JSON$SchemaNode<PrimitiveType: string, FieldsType: Object> = {
-  type: PrimitiveType
+  type: PrimitiveType,
 } & FieldsType &
   JSON$SchemaFieldsCommon;
 
 export type JSON$SchemaArray = JSON$SchemaNode<
-  "array",
+  'array',
   {
     default?: JSON$Value[],
     additionalItems?: boolean | JSON$Schema,
     items?: JSON$Schema[] | JSON$Schema,
     maxItems?: number,
     minItems?: number,
-    uniqueItems?: boolean
+    uniqueItems?: boolean,
   }
 >;
 
 export type JSON$SchemaBoolean = JSON$SchemaNode<
-  "boolean",
+  'boolean',
   {
-    default?: boolean
+    default?: boolean,
   }
 >;
 
 export type JSON$SchemaInteger = JSON$SchemaNode<
-  "integer",
+  'integer',
   {
     default?: number,
     multipleOf?: number,
     maximum?: number,
     minimum?: number,
     exclusiveMaximum?: boolean,
-    exclusiveMinimum?: boolean
+    exclusiveMinimum?: boolean,
   }
 >;
 
 // FIXME: I think we need some sort of computation to do this more accurately
 export type JSON$SchemaMixed = {
   type: JSON$SchemaPrimitiveType[],
-  [keys: string]: mixed
+  [keys: string]: mixed,
 } & JSON$SchemaFieldsCommon;
 
 export type JSON$SchemaNull = JSON$SchemaNode<
-  "null",
+  'null',
   {
-    default?: null
+    default?: null,
   }
 >;
 
 export type JSON$SchemaNumber = JSON$SchemaNode<
-  "number",
+  'number',
   {
     default?: number,
     multipleOf?: number,
     maximum?: number,
     minimum?: number,
     exclusiveMaximum?: boolean,
-    exclusiveMinimum?: boolean
+    exclusiveMinimum?: boolean,
   }
 >;
 
 export type JSON$SchemaString = JSON$SchemaNode<
-  "string",
+  'string',
   {
     default?: string,
     maxLength?: number,
     minLength?: number,
-    pattern?: string
+    pattern?: string,
   }
 >;
 
 export type JSON$SchemaObject = JSON$SchemaNode<
-  "object",
+  'object',
   {
     additionalProperties?: boolean | JSON$Schema,
     dependencies?: {
-      [keys: string]: string[] | JSON$Schema
+      [keys: string]: string[] | JSON$Schema,
     },
     maxProperties?: number,
     minProperties?: number,
     patternProperties?: {
-      [keys: string]: JSON$Schema
+      [keys: string]: JSON$Schema,
     },
     properties?: {
-      [keys: string]: JSON$Schema
+      [keys: string]: JSON$Schema,
     },
-    required?: string[]
+    required?: string[],
   }
 >;
 
 export type JSON$CustomProperties = {
-  tableName: string
+  tableName: string,
 };
 
 export type JSON$Schema =
@@ -169,5 +169,5 @@ export type JSON$Schema =
   | JSON$CustomProperties;
 
 export type JSON$RootSchema = JSON$Schema & {
-  $schema: string
+  $schema: string,
 };

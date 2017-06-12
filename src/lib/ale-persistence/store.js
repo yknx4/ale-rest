@@ -1,8 +1,8 @@
-import { trace, log } from "logger"; // eslint-ignore-line
-import { isString } from "lodash";
-import caller from "caller";
+import { trace, log } from 'logger'; // eslint-ignore-line
+import { isString } from 'lodash';
+import caller from 'caller';
 
-log("store.js");
+log('store.js');
 
 const grapqhlObjectTypes = new Map();
 const state = new Map();
@@ -24,7 +24,7 @@ const storeProxyHandler = {
     trace(`Setting ${name} from ${caller()}`);
     instance.set(name, value);
     return true;
-  }
+  },
 };
 
 const typesStore = new Proxy(grapqhlObjectTypes, storeProxyHandler);

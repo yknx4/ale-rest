@@ -1,10 +1,10 @@
-import { isString, memoize } from "lodash";
-import { trace, info, log } from "logger";
-import plural from "pluralize";
-import { camel } from "case";
-import { models } from "ale-persistence";
-import Cursor from "../utils/Cursor";
-import { stringify64 } from "../utils/base64";
+import { isString, memoize } from 'lodash';
+import { trace, info, log } from 'logger';
+import plural from 'pluralize';
+import { camel } from 'case';
+import { models } from 'ale-persistence';
+import Cursor from '../utils/Cursor';
+import { stringify64 } from '../utils/base64';
 
 log(`selectors.js`);
 
@@ -14,7 +14,7 @@ function getOutputFromInstance(data, _, __, meta) {
 }
 
 const getDescription = description =>
-  isString(description) ? description : "Missing Description";
+  isString(description) ? description : 'Missing Description';
 
 const camelKey = (_, k) => camel(k);
 const pluralKey = (_, k) => plural(k);
@@ -28,7 +28,7 @@ const resolveCollection = name => async (ctx, args) => {
   info(`page ${page} limit ${limit} rpos ${relativePosition}`);
   const start = (page - 1) * limit + relativePosition;
   const end = start + limit - 1;
-  const result = await Model.query().select("id").range(start, end);
+  const result = await Model.query().select('id').range(start, end);
   info(result);
   const { results, total } = result;
   const ids = results.map(e => e.id);
@@ -38,16 +38,16 @@ const resolveCollection = name => async (ctx, args) => {
   );
   const {
     has_next_page: hasNextPage,
-    has_previous_page: hasPreviousPage
-  }: pagination = cursorData.pagination(total);
+    has_previous_page: hasPreviousPage,
+  } = cursorData.pagination(total);
   return {
     edges: parsed,
     pageInfo: {
       endCursor: stringify64(cursorData.cursorForPos(total, total)),
       startCursor: stringify64(cursorData.cursorForPos(1, total)),
       hasNextPage,
-      hasPreviousPage
-    }
+      hasPreviousPage,
+    },
   };
 };
 
@@ -60,5 +60,5 @@ export {
   pluralKey,
   resolveSingleElement,
   resolveCollection,
-  asFn
+  asFn,
 };

@@ -1,8 +1,8 @@
 // @flow
-import { nodeDefinitions, fromGlobalId } from "graphql-relay";
-import { typesStore } from "ale-persistence/store";
-import { debug, log } from "logger";
-import { models } from "ale-persistence";
+import { nodeDefinitions, fromGlobalId } from 'graphql-relay';
+import { typesStore } from 'ale-persistence/store';
+import { debug, log } from 'logger';
+import { models } from 'ale-persistence';
 
 log(`nodeDefinitions.js`);
 const { nodeInterface, nodeField } = nodeDefinitions(
