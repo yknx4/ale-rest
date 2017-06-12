@@ -1,16 +1,13 @@
 // @flow
 import { info } from "logger";
 import { reduce, isNil, omitBy } from "lodash";
-import { getPagingParameters } from "relay-cursor-paging";
-import { fromGlobalId, toGlobalId } from "graphql-relay";
 import Paginator from "paginator";
 import { stringify64, parse64 } from "./base64";
-import {
+import type {
   paginable,
   orderArrayType,
   stringMap,
-  cursoreable,
-  anyMap
+  pagination
 } from "../types";
 
 const LINKS_DISPLAYED = 1;
@@ -45,12 +42,13 @@ function getDataFromParameters(args: paginable): queryParameters {
   const result = {
     limit: encodedLimit(args),
     orderBy: ["id"],
-    pos: 0
+    pos: 0,
+    total: null
   };
   info(`Default ${stringify64(result)}`);
   const cursorData: ?string = encodedData(args);
-  info(`Cursor ${cursorData}`);
   if (cursorData != null) {
+    info(`Cursor ${cursorData}`);
     Object.assign(result, parse64(cursorData));
   }
   info(`Result: ${stringify64(result)}`);
@@ -109,6 +107,11 @@ class Cursor {
     info(limit);
   }
 
+  pagination(total: number, page: ?number): pagination {
+    const paginatedPage: number = page || this.page;
+    return this.$paginator.build(total, paginatedPage);
+  }
+
   get page(): number {
     const { $pos, $limit } = this;
     const page = Math.ceil(($pos + 1) / $limit);
@@ -144,15 +147,11 @@ class Cursor {
     return omitBy(current, isNil);
   }
 
-  cursorForPage(
-    page: number,
-    relativePosition: number = 0,
-    total: ?number
-  ): cursorType {
-    const { $orderBy, $limit } = this;
+  cursorForPos(pos: number, total: ?number): cursorType {
+    const { $orderBy } = this;
     return {
       orderBy: getOrderArray($orderBy),
-      pos: page * $limit + (relativePosition - $limit),
+      pos,
       total
     };
   }

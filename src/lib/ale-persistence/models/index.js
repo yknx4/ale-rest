@@ -1,5 +1,3 @@
-import generateModel from './generateModel';
-import modelsProxy from './modelsProxy';
+import generateModel from "./generateModel";
 
 export default generateModel;
-export { modelsProxy };

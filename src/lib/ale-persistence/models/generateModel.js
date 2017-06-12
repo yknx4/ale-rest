@@ -1,51 +1,60 @@
 // @flow
-import { memoize } from 'lodash';
-import { info } from 'logger';
-import { libState } from 'ale-persistence/store';
-import ajv from '../config/ajv';
-import {
-  validateWithSchema,
-  validateSaveSchema,
-  fromDbResult,
-  toNode,
-} from './modelExtensions';
-import getLoader from '../db/getLoader';
+import { memoize, isString, mapKeys } from "lodash";
+import { info } from "logger";
+import { libModels } from "ale-persistence/store";
+import { Model } from "objection";
+import invariant from "invariant";
+import type JSON$Schema from "../types";
+import getLoader from "../db/getLoader";
+import { toNode } from "./modelExtensions";
+import { camel, snake } from "case";
 
-const { bookshelf } = libState;
-const { Model: ModelBase } = bookshelf;
+const snakeCase = memoize(snake);
+const camelCase = memoize(camel);
 
-const generateModel = memoize((schema: Object): Function => {
-  const { tableName, title: displayName } = schema;
+type isSchema = JSON$Schema | string;
 
-  info(`Creating model ${displayName} with table ${tableName}`);
+const getSchema = (input: isSchema): JSON$Schema =>
+  Object.freeze(isString(input) ? JSON.parse(input) : input);
 
-  const Model = ModelBase.extend({
-    constructor: function constructor() {
-      ModelBase.apply(this, arguments); // eslint-disable-line prefer-rest-params
-      this.on('saving', this.validateSaveSchema);
-    },
-    tableName,
-    schemaValidator: ajv.compile(schema),
-    schema,
-    validateWithSchema,
-    validateSaveSchema,
-    toNode,
-    type: displayName,
+function generateModelFromSchema(schemaInput: isSchema): Function {
+  invariant(schemaInput, "You should include a schema");
+  const schema: JSON$Schema = getSchema(schemaInput);
+  const { title, tableName }: JSON$Schema = schema;
+  info(`Creating Model ${title}`);
+  const klass = class extends Model {
+    static get tableName() {
+      return tableName;
+    }
+    static get jsonSchema() {
+      return schema;
+    }
+    get type() {
+      return title;
+    }
+    toNode(cursorData, index, total) {
+      return toNode.call(this, cursorData, index, total);
+    }
+    $formatDatabaseJson(json) {
+      json = super.$formatDatabaseJson(json); // eslint-disable-line no-param-reassign
+      return mapKeys(json, (value, key) => snakeCase(key));
+    }
+
+    // This is called when an object is read from database.
+    $parseDatabaseJson(json) {
+      json = mapKeys(json, (value, key) => camelCase(key)); // eslint-disable-line no-param-reassign
+
+      return super.$parseDatabaseJson(json);
+    }
+  };
+
+  Object.defineProperty(klass, "name", { value: title });
+  Object.defineProperty(klass, "loader", {
+    value: getLoader.bind(null, "User")
   });
+  libModels[title] = klass;
+  info(`Model ${title} created`);
+  return klass;
+}
 
-  Object.defineProperty(Model, 'name', { value: displayName });
-  Object.defineProperty(Model, 'schema', { value: schema });
-  Object.defineProperty(Model, 'loader', {
-    value: getLoader.bind(null, displayName),
-  });
-  Object.defineProperty(Model, 'rawQuery', {
-    value: () => bookshelf.knex(tableName),
-  });
-  Object.defineProperty(Model, 'fromDbResult', { value: fromDbResult });
-
-  info(`Model ${displayName} created.`);
-
-  return bookshelf.model(displayName, Model);
-}, s => s.title);
-
-export default generateModel;
+export default memoize(generateModelFromSchema);

@@ -1,11 +1,8 @@
-import { createSelector } from 'reselect';
-import { globalIdField } from 'graphql-relay';
-import { trace } from 'logger';
-import {
-  getOutputFromInstance as resolve,
-  getDescription as parseDescription,
-} from '../selectors';
-import { jsonSchemaTypeToGraphQlType } from '../types';
+import { createSelector } from "reselect";
+import { globalIdField } from "graphql-relay";
+import { trace } from "logger";
+import { getDescription as parseDescription } from "../selectors";
+import { jsonSchemaTypeToGraphQlType } from "../types";
 
 const getType = ({ type }): ?string => type;
 const getDescription = ({ description }): ?string => description;
@@ -17,15 +14,14 @@ const generateField = createSelector(
     trace(
       `Generating Field ${name} with type ${type} ${description != null
         ? ` with description ${description}`
-        : ''}`
+        : ""}`
     );
-    if (name === 'id') {
+    if (name === "id") {
       return globalIdField();
     }
     return {
       type: jsonSchemaTypeToGraphQlType(type),
-      description: parseDescription(description),
-      resolve,
+      description: parseDescription(description)
     };
   }
 );

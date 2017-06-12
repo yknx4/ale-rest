@@ -1,4 +1,3 @@
-import initBookshelf from './bookshelf';
-import ajv from './ajv';
+import ajv from "./ajv";
 
-export { initBookshelf, ajv };
+export { ajv }; // eslint-disable-line import/prefer-default-export

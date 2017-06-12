@@ -1,9 +1,9 @@
-import { GraphQLObjectType, GraphQLInterfaceType } from "graphql";
+import { GraphQLObjectType } from "graphql";
 import diff from "jest-diff";
+import { libState } from "ale-persistence/store";
 import createObjectType from "./createObjectType";
 import { jsonSchemaTypeToGraphQlType } from "../types";
 import { getOutputFromInstance as resolve, asFn } from "../selectors";
-import { libState } from "ale-persistence/store";
 import { nodeInterface } from "./nodeDefinitions";
 
 describe("createObjectType", () => {

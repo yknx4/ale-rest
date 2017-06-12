@@ -1,13 +1,11 @@
-import Bookshelf from "bookshelf";
+import { Model } from "objection";
 import { info } from "logger";
 import { libState } from "./store";
 
 function init(knex: Function): void {
   info("Initializing AlePersistence Framework");
   libState.knex = knex;
-  const bookshelf = Bookshelf(knex, { debug: true });
-  bookshelf.plugin("registry");
-  libState.bookshelf = bookshelf;
+  Model.knex(knex);
 }
 
 export default init;

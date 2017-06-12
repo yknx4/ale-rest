@@ -1,42 +1,15 @@
-import stringify from "json-stringify-safe";
-import { info } from "logger";
+/* @flow */
+import { trace } from "logger";
+import Cursor from "../utils/Cursor";
 import { stringify64 } from "../utils/base64";
 
-function validateWithSchema() {
-  info(
-    `Validating ${stringify(this.attributes)} against ${this.schema
-      .title} schema.`
-  );
-  const validSchema = this.schemaValidator(this.attributes);
-  info(`Result: ${validSchema}`);
-  this.schemaErrors = this.schemaValidator.errors;
-  return Promise.resolve(validSchema);
-}
-
-function rejectIfInvalid(valid: boolean): Promise<any> {
-  if (!valid) {
-    return Promise.reject(new Error("Invalid Object"));
-  }
-  return Promise.resolve();
-}
-
-function validateSaveSchema() {
-  return this.validateWithSchema().then(rejectIfInvalid);
-}
-
-async function fromDbResult(result) {
-  info(result);
-  const data = await result;
-  const collection = this.collection();
-  collection._handleResponse(data); // eslint-disable-line no-underscore-dangle
-  return collection;
-}
-
-function toNode(cursorData, index, total) {
+type node = { cursor: string, node: any };
+function toNode(cursorData: Cursor, index: number, total: ?number): node {
+  trace(`Converting into GraphQL node`);
   return {
     cursor: stringify64(cursorData.offsetCursor(index, total)),
     node: this
   };
 }
 
-export { validateWithSchema, validateSaveSchema, fromDbResult, toNode };
+export { toNode }; // eslint-disable-line import/prefer-default-export

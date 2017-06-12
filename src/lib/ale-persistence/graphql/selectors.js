@@ -1,17 +1,11 @@
-// @flow
 import { isString, mapKeys, memoize } from "lodash";
 import { trace, info } from "logger";
 import plural from "pluralize";
 import { camel } from "case";
-import { modelsProxy as models } from "ale-persistence/models";
-import { toGlobalId } from "graphql-relay";
+import { models } from "ale-persistence";
 import Cursor from "../utils/Cursor";
-import { paginable, idType, paginationType } from "../types";
+import type { paginable, idType, pagination } from "../types";
 import { stringify64 } from "../utils/base64";
-
-const instanceToResult = memoize((instance): { [string]: any } =>
-  mapKeys(instance.attributes, (_, key) => camel(key))
-);
 
 function getOutputFromInstance(
   data: Object,
@@ -20,8 +14,7 @@ function getOutputFromInstance(
   meta: Object
 ): any {
   trace(`Getting ${meta.fieldName} from ${JSON.stringify(data)}`);
-  const transformedData = instanceToResult(data);
-  return transformedData[meta.fieldName];
+  return data[meta.fieldName];
 }
 
 const getDescription = (description: ?string): string =>
@@ -42,32 +35,25 @@ const resolveCollection = (name: string) => async (
   const { page, limit, relativePosition } = cursorData;
   const Model: Function = models[name];
   info(`page ${page} limit ${limit} rpos ${relativePosition}`);
-  const {
-    pagination,
-    results: resultsPromise
-  }: {
-    pagination: paginationType,
-    results: any
-  } = await Model.rawQuery().paginate(page, limit, relativePosition);
-  const {
-    has_next_page: hasNextPage,
-    has_previous_page: hasPreviousPage,
-    total_pages: lastPage,
-    total_results: total
-  } = pagination;
-  const results = await resultsPromise;
+  const start = (page - 1) * limit + relativePosition;
+  const end = start + limit - 1;
+  const result = await Model.query().select("id").range(start, end);
+  info(result);
+  const { results, total } = result;
   const ids = results.map(e => e.id);
   const data = await Model.loader().loadMany(ids);
   const parsed = data.map((e: any, i: number): any =>
     e.toNode(cursorData, i + (1 || relativePosition), total)
   );
-  info(parsed);
-  info(pagination);
+  const {
+    has_next_page: hasNextPage,
+    has_previous_page: hasPreviousPage
+  }: pagination = cursorData.pagination(total);
   return {
     edges: parsed,
     pageInfo: {
-      endCursor: stringify64(cursorData.cursorForPage(lastPage, limit, total)),
-      startCursor: stringify64(cursorData.cursorForPage(1, 1, total)),
+      endCursor: stringify64(cursorData.cursorForPos(total, total)),
+      startCursor: stringify64(cursorData.cursorForPos(1, total)),
       hasNextPage,
       hasPreviousPage
     }
@@ -83,6 +69,5 @@ export {
   pluralKey,
   resolveSingleElement,
   resolveCollection,
-  instanceToResult,
   asFn
 };

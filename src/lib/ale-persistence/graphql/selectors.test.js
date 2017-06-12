@@ -9,11 +9,10 @@ import {
   resolveSingleElement
 } from "./selectors";
 import "../../../models";
-import { modelsProxy } from "../models"; // eslint-disable-line
 import { exec } from "shelljs"; // eslint-disable-line
-import { utils } from "ale-persistence"; // eslint-disable-line
+import { utils, models } from "ale-persistence"; // eslint-disable-line
 
-const { User } = modelsProxy;
+const { User } = models;
 const { test: { create } } = utils;
 
 describe("selectors", () => {

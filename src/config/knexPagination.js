@@ -11,6 +11,7 @@ const queryBuilderDummyInstance = Knex.Client.prototype.queryBuilder();
 const builderPrototype = queryBuilderDummyInstance.constructor.prototype;
 Object.assign(builderPrototype, {
   paginate(currentPage = 1, per = 5, from = 0) {
+    console.log("collision");
     info(
       `Paginating page ${currentPage} by ${per} elements with from pos ${from}`
     );

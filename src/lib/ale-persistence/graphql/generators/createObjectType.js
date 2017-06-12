@@ -1,16 +1,15 @@
 import { GraphQLObjectType } from "graphql";
 import { mapValues, mapKeys } from "lodash";
 import { info } from "logger";
-import { typesStore } from "ale-persistence/store";
+import { typesStore, libModels as modelProxy } from "ale-persistence/store";
 import { camelKey, asFn } from "../selectors";
 import { generateField } from "./index";
 import { nodeInterface } from "./nodeDefinitions";
-import modelProxy from "../../models/modelsProxy";
 
 function createObjectType(modelName: string) {
   const model = modelProxy[modelName];
-  const { schema } = model;
-  const { title: name, description, properties } = schema;
+  const { jsonSchema } = model;
+  const { title: name, description, properties } = jsonSchema;
   info(`Creating GraphQLObjectType for ${name}`);
   // debug(properties);
   let fieldsData = mapValues(properties, generateField);

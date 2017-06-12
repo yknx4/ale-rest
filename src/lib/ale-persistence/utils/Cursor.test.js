@@ -1,9 +1,9 @@
-import { toGlobalId } from "graphql-relay";
-import Cursor from "./Cursor";
+import { toGlobalId } from 'graphql-relay';
+import Cursor from './Cursor';
 
 const afterBefore = JSON.stringify({
-  orderBy: ["id", "-created_at"],
-  pos: 1470
+  orderBy: ['id', '-created_at'],
+  pos: 1470,
 });
 
 const pagination = {
@@ -18,7 +18,7 @@ const pagination = {
   total_results: 10000,
   results: 30,
   first_result: 1470,
-  last_result: 1499
+  last_result: 1499,
 };
 
 const { first_result } = pagination;
@@ -26,11 +26,11 @@ const { first_result } = pagination;
 const argsFor = { after: afterBefore, first: 30 };
 const argsBack = { before: afterBefore, last: 30 };
 
-describe("Cursor", () => {
+describe('Cursor', () => {
   let cursor;
 
-  it("should match", () => {
-    const expected = { orderBy: ["id", "-created_at"], pos: 1470 };
+  it('should match', () => {
+    const expected = { orderBy: ['id', '-created_at'], pos: 1470 };
 
     cursor = new Cursor(argsFor);
 

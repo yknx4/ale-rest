@@ -1,7 +1,9 @@
-import 'dotenv/config';
-import init from 'ale-persistence/init';
-import hideStack from 'hide-stack-frames-from';
-import knex from './config/knex';
+import "dotenv/config";
+import init from "ale-persistence/init";
+import hideStack from "hide-stack-frames-from";
+import knex from "./config/knex";
+import { info } from "logger";
 
-hideStack('lodash', 'babel-register', 'bluebird');
+info(`Initializing AleRest`);
+hideStack("lodash", "babel-register", "bluebird");
 init(knex);

@@ -1,17 +1,14 @@
 // @flow
-import { modelsProxy } from "ale-persistence/models";
+import { models } from "ale-persistence";
 import { idType } from "ale-persistence/types";
 import { info } from "logger";
 
-function batchGet(modelName: string) {
+function batchGet(modelName: string): any {
   info(`Batch get from ${modelName}`);
-  return async (keys: Array<idType>) => {
+  return (keys: Array<idType>) => {
     info(`Getting ${keys.join(",")}`);
-    const Model = modelsProxy[modelName];
-    const collection = await Model.fromDbResult(
-      Model.rawQuery().where(Model.schema.primaryKey, "IN", keys)
-    );
-    return collection.toArray();
+    const Model = models[modelName];
+    return Model.query().where(Model.jsonSchema.primaryKey, "IN", keys);
   };
 }
 

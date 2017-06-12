@@ -1,15 +1,16 @@
 import { trace, error } from "logger"; // eslint-ignore-line
 import { isString } from "lodash";
+import caller from "caller";
 
 const grapqhlObjectTypes = new Map();
 const state = new Map();
+const models = new Map();
 
 const storeProxyHandler = {
   get(instance, name) {
     if (!isString(name)) return instance[name];
-    trace(`Fetching ${name}`);
+    trace(`Fetching ${name} from ${caller()}`);
     if (!instance.has(name)) {
-      error(Object.keys(instance));
       throw new TypeError(
         `Couldn't find ${name}. Have you initialized AleRest?`
       );
@@ -18,7 +19,7 @@ const storeProxyHandler = {
   },
   set(instance, name, value) {
     if (instance.has(name)) return false;
-    trace(`Setting ${name}`);
+    trace(`Setting ${name} from ${caller()}`);
     instance.set(name, value);
     return true;
   }
@@ -26,4 +27,5 @@ const storeProxyHandler = {
 
 const typesStore = new Proxy(grapqhlObjectTypes, storeProxyHandler);
 const libState = new Proxy(state, storeProxyHandler);
-export { typesStore, libState };
+const libModels = new Proxy(models, storeProxyHandler);
+export { typesStore, libState, libModels };
