@@ -2,45 +2,35 @@ import {
   asFn,
   camelKey,
   getDescription,
-  getOutputFromInstance,
-  instanceToResult,
+  // getOutputFromInstance,
   pluralKey,
   // resolveCollection,
-  resolveSingleElement,
+  // resolveSingleElement
 } from './selectors';
 import '../../../models';
 import { exec } from 'shelljs'; // eslint-disable-line
 import { utils, models } from 'ale-persistence'; // eslint-disable-line
 
 // const { User } = models;
-const { test: { create } } = utils;
+// const { test: { create } } = utils;
 
 describe('selectors', () => {
-  const name = 'awesome name';
-  const data = {
-    attributes: {
-      first_name: name,
-    },
-  };
-  const expectedOutput = {
-    firstName: name,
-  };
-  const meta = {
-    fieldName: 'firstName',
-  };
+  // const name = "awesome name";
+  // const data = {
+  //   attributes: {
+  //     firstName: name
+  //   }
+  // };
+  // const meta = {
+  //   fieldName: "firstName"
+  // };
 
-  describe('instanceToResult', () => {
-    it('converts attributes map to camelCase', () => {
-      expect(instanceToResult(data)).toEqual(expectedOutput);
-    });
-  });
-
-  describe('getOutputFromInstance', () => {
-    it('should get the appropiate field based on meta fieldName', () => {
-      const output = getOutputFromInstance(data, null, null, meta);
-      expect(output).toEqual(name);
-    });
-  });
+  // describe("getOutputFromInstance", () => {
+  //   it("should get the appropiate field based on meta fieldName", () => {
+  //     const output = getOutputFromInstance(data, null, null, meta);
+  //     expect(output).toEqual(name);
+  //   });
+  // });
 
   describe('getDescription', () => {
     it('should get description if available', () => {
@@ -64,15 +54,16 @@ describe('selectors', () => {
     });
   });
 
-  describe('resolveSingleElement', () => {
-    let resolved;
-    beforeAll(async () => {
-      resolved = await create('User');
-    });
-    it('should find model by id', async () => {
-      await resolveSingleElement('User')(null, { id: resolved.id });
-    });
-  });
+  // describe("resolveSingleElement", () => {
+  //   let resolved;
+  //   beforeEach(async () => {
+  //     resolved = await create("User");
+  //   });
+  //   it("should find model by id", async () => {
+  //     console.log(resolved);
+  //     await resolveSingleElement("User")(null, { id: resolved.id });
+  //   });
+  // });
 
   describe('asFn', () => {
     it('shoudl return a function that returns the input', () => {

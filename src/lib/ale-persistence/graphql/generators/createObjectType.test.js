@@ -1,6 +1,6 @@
 import { GraphQLObjectType } from 'graphql';
 import diff from 'jest-diff';
-import { libState } from 'ale-persistence/store';
+import { models } from 'ale-persistence';
 import createObjectType from './createObjectType';
 import { jsonSchemaTypeToGraphQlType } from '../types';
 import { getOutputFromInstance as resolve, asFn } from '../selectors';
@@ -39,8 +39,8 @@ describe('createObjectType', () => {
   });
 
   const model = () => {};
-  model.schema = schema;
-  libState.bookshelf.model('ModelName', model);
+  model.jsonSchema = schema;
+  models.ModelName = model;
 
   it('creates an appropiate GraphQLInputObjectType based on a Model', () => {
     const result = createObjectType('ModelName');

@@ -3,7 +3,6 @@ import { isString, mapValues, pickBy } from 'lodash';
 import { fake } from 'faker';
 import { models } from 'ale-persistence';
 import { trace, log } from 'logger';
-import type { Model as ModelType } from 'objection';
 
 log(`testUtils.js`);
 
@@ -17,13 +16,10 @@ function build(model: string): any {
   return mapValues(pickBy(properties, hasFake), fakeData);
 }
 
-async function create(modelName: string): Promise<any> {
+function create(modelName: string): Promise<any> {
   const Model: () => any = models[modelName];
   trace(`Creating for model ${modelName}`);
-  const instance: ModelType = new Model(build(modelName));
-  const savePromise = instance.save();
-  trace(savePromise);
-  return savePromise;
+  return Model.query().insert(build('User'));
 }
 
 export { build, create };
