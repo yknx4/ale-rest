@@ -1,9 +1,10 @@
 import { createSelector } from "reselect";
 import { globalIdField } from "graphql-relay";
-import { trace } from "logger";
+import { trace, log } from "logger";
 import { getDescription as parseDescription } from "../selectors";
 import { jsonSchemaTypeToGraphQlType } from "../types";
 
+log(`generateField.js`);
 const getType = ({ type }): ?string => type;
 const getDescription = ({ description }): ?string => description;
 const getName = (_, name) => name;

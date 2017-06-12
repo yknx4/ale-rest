@@ -1,9 +1,10 @@
 // @flow
 import { nodeDefinitions, fromGlobalId } from "graphql-relay";
 import { typesStore } from "ale-persistence/store";
-import { debug } from "logger";
+import { debug, log } from "logger";
 import { models } from "ale-persistence";
 
+log(`nodeDefinitions.js`);
 const { nodeInterface, nodeField } = nodeDefinitions(
   globalId => {
     const { type, id } = fromGlobalId(globalId);

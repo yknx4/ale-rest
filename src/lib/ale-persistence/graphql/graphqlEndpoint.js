@@ -1,7 +1,9 @@
-import graphqlHTTP from 'express-graphql';
-import { reduce } from 'lodash';
-import { error } from 'logger';
-import createGraphQlSchema from './createGraphQlSchema';
+import graphqlHTTP from "express-graphql";
+import { reduce } from "lodash";
+import { error, log } from "logger";
+import createGraphQlSchema from "./createGraphQlSchema";
+
+log(`graphqlEndoint.js`);
 
 function mirrorArray(input: Array<string>): { [string]: string } {
   return reduce(
@@ -26,9 +28,9 @@ function graphqlEndpoint(
         message: err.message,
         locations: err.locations,
         stack: err.stack,
-        path: err.path,
+        path: err.path
       };
-    },
+    }
   });
 }
 

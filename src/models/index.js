@@ -1,10 +1,10 @@
-import { generateModel, models } from "ale-persistence"; // eslint-disable-line
-import userSchema from "./User.json";
+import { generateModel, models } from 'ale-persistence'; // eslint-disable-line
+import userSchema from './User.json';
 
 const User = generateModel(userSchema);
 
 const onlyModels = {
-  User
+  User,
 };
 
 export default models;

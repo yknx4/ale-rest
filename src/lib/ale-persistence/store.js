@@ -1,6 +1,8 @@
-import { trace, error } from "logger"; // eslint-ignore-line
+import { trace, log } from "logger"; // eslint-ignore-line
 import { isString } from "lodash";
 import caller from "caller";
+
+log("store.js");
 
 const grapqhlObjectTypes = new Map();
 const state = new Map();

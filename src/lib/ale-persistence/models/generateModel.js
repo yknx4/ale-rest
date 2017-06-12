@@ -1,13 +1,15 @@
 // @flow
 import { memoize, isString, mapKeys } from "lodash";
-import { info } from "logger";
+import { info, log } from "logger";
 import { libModels } from "ale-persistence/store";
 import { Model } from "objection";
 import invariant from "invariant";
-import type JSON$Schema from "../types";
+import { camel, snake } from "case";
+import type { JSON$Schema } from "../types";
 import getLoader from "../db/getLoader";
 import { toNode } from "./modelExtensions";
-import { camel, snake } from "case";
+
+log(`generateModel.js`);
 
 const snakeCase = memoize(snake);
 const camelCase = memoize(camel);
@@ -17,7 +19,7 @@ type isSchema = JSON$Schema | string;
 const getSchema = (input: isSchema): JSON$Schema =>
   Object.freeze(isString(input) ? JSON.parse(input) : input);
 
-function generateModelFromSchema(schemaInput: isSchema): Function {
+function generateModelFromSchema(schemaInput: isSchema): () => Model {
   invariant(schemaInput, "You should include a schema");
   const schema: JSON$Schema = getSchema(schemaInput);
   const { title, tableName }: JSON$Schema = schema;
@@ -29,6 +31,7 @@ function generateModelFromSchema(schemaInput: isSchema): Function {
     static get jsonSchema() {
       return schema;
     }
+    //  eslint-disable-next-line class-methods-use-this
     get type() {
       return title;
     }

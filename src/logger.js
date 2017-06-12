@@ -18,7 +18,7 @@ const logger = tracerdebug.colorConsole({
     {
       error:
         "{{timestamp}} {{path}}:{{line}} <{{title}}> {{message}} \nCall Stack:\n{{stack}}",
-      log: "{{timestamp}} <{{title}}> {{message}} \nCall Stack:\n{{stack}}"
+      log: "{{timestamp}} <{{title}}> {{message}}"
     }
   ],
   dateformat: "HH:MM:ss.L",

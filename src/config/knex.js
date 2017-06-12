@@ -1,16 +1,16 @@
-import knex from "knex";
-import knexConfig from "../../knexfile"; // eslint-disable-line
-import "./knexFetch";
-import "./knexPagination";
+import knex from 'knex';
+import knexConfig from '../../knexfile'; // eslint-disable-line
+import './knexFetch';
+import './knexPagination';
 
 const configPath =
-  process.env.SERVER_ENV || process.env.NODE_ENV || "development";
+  process.env.SERVER_ENV || process.env.NODE_ENV || 'development';
 
 const db = knex(knexConfig[configPath]);
 
-process.once("SIGUSR2", () => {
+process.once('SIGUSR2', () => {
   db.destroy();
-  process.kill(process.pid, "SIGUSR2");
+  process.kill(process.pid, 'SIGUSR2');
 });
 
 export default db;

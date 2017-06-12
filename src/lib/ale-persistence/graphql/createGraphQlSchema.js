@@ -1,19 +1,22 @@
 // @flow
-import { GraphQLObjectType, GraphQLSchema } from 'graphql';
-import { mapKeys, mapValues, values } from 'lodash';
-import { info } from 'logger';
-import { connectionDefinitions, connectionArgs } from 'graphql-relay';
+import { GraphQLObjectType, GraphQLSchema } from "graphql";
+import { mapKeys, mapValues, values } from "lodash";
+import { info, log } from "logger";
+import { connectionDefinitions, connectionArgs } from "graphql-relay";
 import {
   camelKey,
   pluralKey,
   resolveCollection,
-  resolveSingleElement,
-} from './selectors';
-import { createObjectType } from './generators';
-import { elementQueryDefaults, stringMap, anyMap } from './types';
-import { nodeField, nodeInterface } from './generators/nodeDefinitions';
+  resolveSingleElement
+} from "./selectors";
+import { createObjectType } from "./generators";
+import { elementQueryDefaults } from "./types";
+import type { stringMap, anyMap } from "../types";
+import { nodeField, nodeInterface } from "./generators/nodeDefinitions";
 
+log(`createGraphQlSchema`);
 function createGraphQlRootQuery(models: stringMap): GraphQLSchema {
+  info(`Creating Schema from ${Object.keys(models).join(", ")}.`);
   const typesMap = {};
 
   Object.assign(
@@ -30,7 +33,7 @@ function createGraphQlRootQuery(models: stringMap): GraphQLSchema {
     (v: any, name: string): anyMap => ({
       ...elementQueryDefaults,
       type: nodeInterface,
-      resolve: resolveSingleElement(name),
+      resolve: resolveSingleElement(name)
     })
   );
 
@@ -39,7 +42,7 @@ function createGraphQlRootQuery(models: stringMap): GraphQLSchema {
   let collectionQueryFields = mapValues(typesMap, (v: any, name: string) => ({
     type: connectionsMap[name].connectionType,
     args: connectionArgs,
-    resolve: resolveCollection(name),
+    resolve: resolveCollection(name)
   }));
 
   collectionQueryFields = mapKeys(collectionQueryFields, camelKey);
@@ -48,17 +51,17 @@ function createGraphQlRootQuery(models: stringMap): GraphQLSchema {
   const fields = () => ({
     ...elementQueryFields,
     ...collectionQueryFields,
-    node: nodeField,
+    node: nodeField
   });
 
   const queryType = new GraphQLObjectType({
-    name: 'Query',
-    fields,
+    name: "Query",
+    fields
   });
 
   return new GraphQLSchema({
     query: queryType,
-    types: values(typesMap),
+    types: values(typesMap)
   });
 }
 

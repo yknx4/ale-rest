@@ -1,5 +1,5 @@
 // @flow
-import { info } from "logger";
+import { info, log } from "logger";
 import { reduce, isNil, omitBy } from "lodash";
 import Paginator from "paginator";
 import { stringify64, parse64 } from "./base64";
@@ -9,6 +9,8 @@ import type {
   stringMap,
   pagination
 } from "../types";
+
+log(`Cursos.js`);
 
 const LINKS_DISPLAYED = 1;
 
@@ -97,7 +99,7 @@ class Cursor {
     const { orderBy, limit, pos }: queryParameters = getDataFromParameters(
       args
     );
-    this.$orderBy = getOrderMap(orderBy);
+    this.$orderBy = getOrderMap(inArray(orderBy));
     this.$limit = limit;
     this.$pos = pos;
     this.$rpos = this.$pos % limit;

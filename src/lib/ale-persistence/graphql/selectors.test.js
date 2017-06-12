@@ -5,77 +5,77 @@ import {
   getOutputFromInstance,
   instanceToResult,
   pluralKey,
-  resolveCollection,
-  resolveSingleElement
-} from "./selectors";
-import "../../../models";
-import { exec } from "shelljs"; // eslint-disable-line
-import { utils, models } from "ale-persistence"; // eslint-disable-line
+  // resolveCollection,
+  resolveSingleElement,
+} from './selectors';
+import '../../../models';
+import { exec } from 'shelljs'; // eslint-disable-line
+import { utils, models } from 'ale-persistence'; // eslint-disable-line
 
-const { User } = models;
+// const { User } = models;
 const { test: { create } } = utils;
 
-describe("selectors", () => {
-  const name = "awesome name";
+describe('selectors', () => {
+  const name = 'awesome name';
   const data = {
     attributes: {
-      first_name: name
-    }
+      first_name: name,
+    },
   };
   const expectedOutput = {
-    firstName: name
+    firstName: name,
   };
   const meta = {
-    fieldName: "firstName"
+    fieldName: 'firstName',
   };
 
-  describe("instanceToResult", () => {
-    it("converts attributes map to camelCase", () => {
+  describe('instanceToResult', () => {
+    it('converts attributes map to camelCase', () => {
       expect(instanceToResult(data)).toEqual(expectedOutput);
     });
   });
 
-  describe("getOutputFromInstance", () => {
-    it("should get the appropiate field based on meta fieldName", () => {
+  describe('getOutputFromInstance', () => {
+    it('should get the appropiate field based on meta fieldName', () => {
       const output = getOutputFromInstance(data, null, null, meta);
       expect(output).toEqual(name);
     });
   });
 
-  describe("getDescription", () => {
-    it("should get description if available", () => {
-      expect(getDescription("d")).toEqual("d");
+  describe('getDescription', () => {
+    it('should get description if available', () => {
+      expect(getDescription('d')).toEqual('d');
     });
 
-    it("should get Missing Description if unavailable", () => {
-      expect(getDescription()).toEqual("Missing Description");
-    });
-  });
-
-  describe("camelKey", () => {
-    it("should convert key (second param) to camelKey", () => {
-      expect(camelKey(null, "first_name")).toEqual("firstName");
+    it('should get Missing Description if unavailable', () => {
+      expect(getDescription()).toEqual('Missing Description');
     });
   });
 
-  describe("pluralKey", () => {
-    it("should pluralize key (second param)", () => {
-      expect(pluralKey(null, "user")).toEqual("users");
+  describe('camelKey', () => {
+    it('should convert key (second param) to camelKey', () => {
+      expect(camelKey(null, 'first_name')).toEqual('firstName');
     });
   });
 
-  describe("resolveSingleElement", () => {
+  describe('pluralKey', () => {
+    it('should pluralize key (second param)', () => {
+      expect(pluralKey(null, 'user')).toEqual('users');
+    });
+  });
+
+  describe('resolveSingleElement', () => {
     let resolved;
     beforeAll(async () => {
-      resolved = await create("User");
+      resolved = await create('User');
     });
-    it("should find model by id", async () => {
-      await resolveSingleElement("User")(null, { id: resolved.id });
+    it('should find model by id', async () => {
+      await resolveSingleElement('User')(null, { id: resolved.id });
     });
   });
 
-  describe("asFn", () => {
-    it("shoudl return a function that returns the input", () => {
+  describe('asFn', () => {
+    it('shoudl return a function that returns the input', () => {
       const input = {};
       const fn = asFn(input);
       expect(fn()).toBe(input);

@@ -1,7 +1,9 @@
 /* @flow */
-import { trace } from "logger";
+import { trace, log } from "logger";
 import Cursor from "../utils/Cursor";
 import { stringify64 } from "../utils/base64";
+
+log(`modelExtensions.js`);
 
 type node = { cursor: string, node: any };
 function toNode(cursorData: Cursor, index: number, total: ?number): node {

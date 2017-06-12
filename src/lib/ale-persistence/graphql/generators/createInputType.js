@@ -1,18 +1,19 @@
-import { GraphQLInputObjectType } from 'graphql';
+import { GraphQLInputObjectType } from "graphql";
 
-import { mapValues, mapKeys } from 'lodash';
+import { mapValues, mapKeys } from "lodash";
 
-import { camelKey } from '../selectors';
-import { generateInputField } from './index';
-import { info } from 'logger'; // eslint-disable-line
+import { camelKey } from "../selectors";
+import { generateInputField } from "./index";
+import { info, log } from "logger"; // eslint-disable-line
 
+log(`createInputType.js`);
 function createInputType(model: Function): GraphQLInputObjectType {
   const { schema } = model;
   const { title: name, properties, description } = schema;
   info(
     `Creating GraphQLInputObjectType for ${name}${description != null
       ? ` with description ${description}`
-      : ''}`
+      : ""}`
   );
   // debug(properties);
   let fieldsData = mapValues(properties, generateInputField);
@@ -21,7 +22,7 @@ function createInputType(model: Function): GraphQLInputObjectType {
   return new GraphQLInputObjectType({
     name: `${name}Input`,
     fields: fieldsData,
-    description,
+    description
   });
 }
 

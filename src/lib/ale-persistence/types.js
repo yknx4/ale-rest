@@ -1,3 +1,5 @@
+// @flow
+/* eslint-disable no-undef, no-use-before-define */
 export type paginable = {
   before: ?string,
   last: ?number,
@@ -29,9 +31,6 @@ export type paginationType = {
   first_result: number,
   last_result: number
 };
-
-// @flow
-/* eslint-disable no-undef, no-use-before-define */
 
 export type JSON$Pointer = {
   $ref: string
