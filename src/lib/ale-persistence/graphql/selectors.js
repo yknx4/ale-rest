@@ -41,8 +41,10 @@ const executeQuery = async (Model, $selectFields, $orderSql, $start, $end) =>
     .cache()
     .then(resultData => resultData);
 
-const resolveSingleElement = name => (root, { id }) =>
-  models[name].loader().load(id);
+const resolveSingleElement = name => (root, { id }) => {
+  info('resolving single');
+  return models[name].loader().load(id);
+};
 const resolveCollection = name => async (ctx, args) => {
   const cursorData = new Cursor(args);
   const { page, limit, relativePosition, selectFields, orderSql } = cursorData;

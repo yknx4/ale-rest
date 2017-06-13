@@ -22,7 +22,7 @@ const generateField = createSelector(
     }
     return {
       type: jsonSchemaTypeToGraphQlType(type),
-      description: parseDescription(description),
+      description: parseDescription(description, name),
     };
   }
 );

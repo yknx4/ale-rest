@@ -4,4 +4,4 @@ import * as base64 from './base64';
 
 log(`utils/index.js`);
 
-export { test, Cursor, base64 }; // eslint-disable-line import/prefer-default-export
+export { Cursor, base64 }; // eslint-disable-line import/prefer-default-export

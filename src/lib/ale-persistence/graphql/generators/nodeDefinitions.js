@@ -9,6 +9,7 @@ const { nodeInterface, nodeField } = nodeDefinitions(
   globalId => {
     const { type, id } = fromGlobalId(globalId);
     debug(`${type} ${id}`);
+    models[type].loader().load(id).then(debug);
     return models[type].loader().load(id);
   },
   obj => {

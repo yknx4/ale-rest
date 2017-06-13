@@ -17,7 +17,7 @@ function batchGet(modelName: string): any {
       'IN',
       keys
     );
-    return keys.map(k => find(result, { id: k }));
+    return keys.map(k => find(result, { id: parseInt(k, 10) }));
   };
 }
 

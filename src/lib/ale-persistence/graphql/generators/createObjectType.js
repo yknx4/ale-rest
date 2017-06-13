@@ -11,13 +11,11 @@ log(`createObjectType.js`);
 function createObjectType(modelName: string) {
   const model = models[modelName];
   const { jsonSchema } = model;
-  info(model);
   const { title: name, description, properties } = jsonSchema;
   info(`Creating GraphQLObjectType for ${name}`);
   // debug(properties);
   let fieldsData = mapValues(properties, generateField);
   fieldsData = mapKeys(fieldsData, camelKey);
-  // debug(fieldsData);
   const fields = asFn(fieldsData);
   const newType = new GraphQLObjectType({
     name,

@@ -23,7 +23,8 @@ const getSchema = (input: isSchema): JSON$Schema =>
 function generateModelFromSchema(schemaInput: isSchema): () => Model {
   invariant(schemaInput, 'You should include a schema');
   const schema: JSON$Schema = getSchema(schemaInput);
-  const { title, 'x-tableName': tableName }: JSON$Schema = schema;
+  const { title, tableName }: JSON$Schema = schema;
+  invariant(tableName, 'Table Name is required');
   info(`Creating Model ${title}`);
   const CacheQueryBuilder = CachedQueryBuilder(Model);
   const klass = class extends Model {
@@ -77,7 +78,7 @@ function generateModelFromSchema(schemaInput: isSchema): () => Model {
 
   Object.defineProperty(klass, 'name', { value: title });
   Object.defineProperty(klass, 'loader', {
-    value: getLoader.bind(null, 'User'),
+    value: getLoader.bind(null, title),
   });
   libModels[title] = klass;
   info(`Model ${title} created`);
