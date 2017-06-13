@@ -1,5 +1,6 @@
 {
-    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "https://www.ale.world/schemas/user",
     "title": "User",
     "type": "object",
     "tableName": "users",
@@ -12,50 +13,55 @@
         },
         "first_name": {
             "description": "whata",
-            "fake": "name.firstName",
+            "x-faker": "name.firstName",
             "type": "string"
         },
         "last_name": {
-            "fake": "name.lastName",
+            "x-faker": "name.lastName",
             "type": "string"
         },
         "username": {
-            "fake": "internet.userName",
+            "x-faker": "internet.userName",
             "type": "string"
         },
         "email": {
-            "fake": "internet.email",
+            "x-faker": "internet.email",
             "type": "string",
             "format": "email"
         },
         "created_at": {
-          "anyOf": [
-            {
-              "type": "null"
-          },
-          {
-              "type": "object"
-          },
-          {
-              "type": "string",
-              "format": "date-time"
-          }
-      ]
-      },
-      "updated_at": {
-          "anyOf": [
-            {
-              "type": "null"
-          },
-          {
-              "type": "object"
-          },
-          {
-              "type": "string",
-              "format": "date-time"
-          }
-      ]
-      }
-  },
-  "required": ["first_name", "last_name"]
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "object"
+                },
+                {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            ]
+        },
+        "updated_at": {
+            "anyOf": [
+                {
+                    "type": "null"
+                },
+                {
+                    "type": "object"
+                },
+                {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            ]
+        }
+    },
+    "required": [
+        "email",
+        "first_name",
+        "last_name",
+        "username"
+    ]
 }
