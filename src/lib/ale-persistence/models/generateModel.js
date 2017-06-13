@@ -8,6 +8,7 @@ import { camel, snake } from 'case';
 import type { JSON$Schema } from '../types';
 import getLoader from '../db/getLoader';
 import { toNode } from './modelExtensions';
+import CachedQueryBuilder from './CachedQueryBuilder';
 
 log(`generateModel.js`);
 
@@ -24,7 +25,11 @@ function generateModelFromSchema(schemaInput: isSchema): () => Model {
   const schema: JSON$Schema = getSchema(schemaInput);
   const { title, tableName }: JSON$Schema = schema;
   info(`Creating Model ${title}`);
+  const CacheQueryBuilder = CachedQueryBuilder(Model);
   const klass = class extends Model {
+    static get QueryBuilder() {
+      return CacheQueryBuilder;
+    }
     static get tableName() {
       return tableName;
     }

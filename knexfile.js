@@ -8,8 +8,8 @@ module.exports = {
       password: "postgres"
     },
     pool: {
-      min: 2,
-      max: 20
+      min: 1,
+      max: 100
     },
     migrations: {
       tableName: "knex_migrations"

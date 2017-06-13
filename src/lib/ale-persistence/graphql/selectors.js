@@ -19,16 +19,25 @@ const getDescription = description =>
 const camelKey = (_, k) => camel(k);
 const pluralKey = (_, k) => plural(k);
 
+const executeQuery = async (Model, $selectFields, $orderSql, $start, $end) =>
+  Model.query()
+    .select(...$selectFields)
+    .orderByRaw($orderSql)
+    .range($start, $end)
+    .cache()
+    .then(resultData => resultData);
+
 const resolveSingleElement = name => (root, { id }) =>
   models[name].loader().load(id);
 const resolveCollection = name => async (ctx, args) => {
   const cursorData = new Cursor(args);
-  const { page, limit, relativePosition } = cursorData;
+  const { page, limit, relativePosition, selectFields, orderSql } = cursorData;
   const Model = models[name];
   info(`page ${page} limit ${limit} rpos ${relativePosition}`);
   const start = (page - 1) * limit + relativePosition;
   const end = start + limit - 1;
-  const result = await Model.query().select('id').range(start, end);
+
+  const result = await executeQuery(Model, selectFields, orderSql, start, end);
   info(result);
   const { results, total } = result;
   const ids = results.map(e => e.id);
@@ -40,7 +49,7 @@ const resolveCollection = name => async (ctx, args) => {
     has_next_page: hasNextPage,
     has_previous_page: hasPreviousPage,
   } = cursorData.pagination(total);
-  return {
+  const response = {
     edges: parsed,
     pageInfo: {
       endCursor: stringify64(cursorData.cursorForPos(total, total)),
@@ -49,6 +58,7 @@ const resolveCollection = name => async (ctx, args) => {
       hasPreviousPage,
     },
   };
+  return response;
 };
 
 const asFn = memoize(input => () => input);

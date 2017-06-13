@@ -3,12 +3,7 @@ import { info, log } from 'logger';
 import { reduce, isNil, omitBy } from 'lodash';
 import Paginator from 'paginator';
 import { stringify64, parse64 } from './base64';
-import type {
-  paginable,
-  orderArrayType,
-  stringMap,
-  pagination,
-} from '../types';
+import type { paginable, orderArrayType, stringMap } from '../types';
 
 log(`Cursos.js`);
 
@@ -87,6 +82,17 @@ function getOrderArray(orderMap: stringMap): orderArrayType {
   );
 }
 
+function getOrderString(orderMap: stringMap): string {
+  return reduce(
+    orderMap,
+    (a: Array<string>, v: string, k: string): Array<string> => {
+      a.push(`${k} ${v}`);
+      return a;
+    },
+    []
+  ).join(', ');
+}
+
 class Cursor {
   $orderBy: stringMap;
   $limit: number;
@@ -109,7 +115,7 @@ class Cursor {
     info(limit);
   }
 
-  pagination(total: number, page: ?number): pagination {
+  pagination(total: number, page: ?number) {
     const paginatedPage: number = page || this.page;
     return this.$paginator.build(total, paginatedPage);
   }
@@ -147,6 +153,19 @@ class Cursor {
     ): cursorType);
     current.pos += offset;
     return omitBy(current, isNil);
+  }
+
+  get orderSql(): string {
+    return getOrderString(this.$orderBy);
+  }
+
+  get selectFields(): Array<string> {
+    const orderKeys = Object.keys(this.$orderBy);
+    if (!orderKeys.includes('id')) {
+      orderKeys.push('id');
+    }
+    info(orderKeys);
+    return orderKeys;
   }
 
   cursorForPos(pos: number, total: ?number): cursorType {
