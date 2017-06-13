@@ -1,20 +1,34 @@
+// @flow
 import { isString, memoize } from 'lodash';
 import { trace, info, log } from 'logger';
 import plural from 'pluralize';
-import { camel } from 'case';
+import { camel, title } from 'case';
 import { models } from 'ale-persistence';
 import Cursor from '../utils/Cursor';
 import { stringify64 } from '../utils/base64';
 
 log(`selectors.js`);
 
-function getOutputFromInstance(data, _, __, meta) {
+type isMeta = {
+  fieldName: string,
+};
+
+type isPrimitive = boolean | number | string;
+
+function getOutputFromInstance(
+  data: any,
+  _: any,
+  __: any,
+  meta: isMeta
+): isPrimitive {
   trace(`Getting ${meta.fieldName} from ${JSON.stringify(data)}`);
   return data[meta.fieldName];
 }
 
-const getDescription = description =>
-  isString(description) ? description : 'Missing Description';
+const getDescription = (
+  description: ?string,
+  name: string = 'missing description'
+): string => (isString(description) ? description : title(name));
 
 const camelKey = (_, k) => camel(k);
 const pluralKey = (_, k) => plural(k);

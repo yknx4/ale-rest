@@ -8,9 +8,11 @@ const configPath =
 
 const db = knex(knexConfig[configPath]);
 
-process.once('SIGUSR2', () => {
-  db.destroy();
-  process.kill(process.pid, 'SIGUSR2');
-});
+if (process.env === 'development') {
+  process.once('SIGUSR2', () => {
+    db.destroy();
+    process.kill(process.pid, 'SIGUSR2');
+  });
+}
 
 export default db;

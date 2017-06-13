@@ -3,16 +3,15 @@
     "id": "https://www.ale.world/schemas/user",
     "title": "User",
     "type": "object",
-    "tableName": "users",
+    "x-tableName": "users",
     "additionalProperties": false,
     "description": "awesome description",
     "primaryKey": "id",
     "properties": {
         "id": {
-            "type": "integer"
+            "$ref": "#/definitions/positiveInt"
         },
         "first_name": {
-            "description": "whata",
             "x-faker": "name.firstName",
             "type": "string"
         },
@@ -30,32 +29,14 @@
             "format": "email"
         },
         "created_at": {
-            "anyOf": [
-                {
-                    "type": "null"
-                },
-                {
-                    "type": "object"
-                },
-                {
-                    "type": "string",
-                    "format": "date-time"
-                }
-            ]
+            "type": "string",
+            "format": "date-time",
+            "x-change": "date"
         },
         "updated_at": {
-            "anyOf": [
-                {
-                    "type": "null"
-                },
-                {
-                    "type": "object"
-                },
-                {
-                    "type": "string",
-                    "format": "date-time"
-                }
-            ]
+            "type": "string",
+            "format": "date-time",
+            "x-change": "date"
         }
     },
     "required": [
@@ -63,5 +44,12 @@
         "first_name",
         "last_name",
         "username"
-    ]
+    ],
+    "definitions": {
+        "positiveInt": {
+            "type": "integer",
+            "minimum": 0,
+            "exclusiveMinimum": true
+        }
+    }
 }

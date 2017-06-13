@@ -7,7 +7,7 @@ import invariant from 'invariant';
 import { camel, snake } from 'case';
 import type { JSON$Schema } from '../types';
 import getLoader from '../db/getLoader';
-import { toNode } from './modelExtensions';
+import { toNode, build, create } from './modelExtensions';
 import CachedQueryBuilder from './CachedQueryBuilder';
 
 log(`generateModel.js`);
@@ -23,7 +23,7 @@ const getSchema = (input: isSchema): JSON$Schema =>
 function generateModelFromSchema(schemaInput: isSchema): () => Model {
   invariant(schemaInput, 'You should include a schema');
   const schema: JSON$Schema = getSchema(schemaInput);
-  const { title, tableName }: JSON$Schema = schema;
+  const { title, 'x-tableName': tableName }: JSON$Schema = schema;
   info(`Creating Model ${title}`);
   const CacheQueryBuilder = CachedQueryBuilder(Model);
   const klass = class extends Model {
@@ -35,6 +35,15 @@ function generateModelFromSchema(schemaInput: isSchema): () => Model {
     }
     static get jsonSchema() {
       return schema;
+    }
+    static get test() {
+      if (process.env.NODE_ENV === 'test') {
+        return {
+          build: build.bind(this),
+          create: create.bind(this),
+        };
+      }
+      throw new Error('Not Implemented');
     }
     //  eslint-disable-next-line class-methods-use-this
     get type() {
@@ -53,6 +62,16 @@ function generateModelFromSchema(schemaInput: isSchema): () => Model {
       json = mapKeys(json, (value, key) => camelCase(key)); // eslint-disable-line no-param-reassign
 
       return super.$parseDatabaseJson(json);
+    }
+
+    $beforeInsert() {
+      const timestamp = new Date().toISOString();
+      this.created_at = timestamp;
+      this.updated_at = timestamp;
+    }
+
+    $beforeUpdate() {
+      this.updated_at = new Date().toISOString();
     }
   };
 
