@@ -14,6 +14,7 @@
     "serve": "node build/index.js",
     "precommit": "lint-staged",
     "knex": "knex",
+    "db:seed": "knex seed:run",
     "db": "knex-migrate",
     "migrate:make": "knex migrate:make",
     "db:migrate": "knex-migrate up",

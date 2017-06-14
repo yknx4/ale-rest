@@ -1,32 +1,35 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "id": "https://www.ale.world/schemas/user",
-    "title": "User",
+    "id": "https://www.ale.world/schemas/post",
+    "title": "Post",
     "type": "object",
-    "tableName": "users",
+    "tableName": "posts",
     "additionalProperties": false,
-    "description": "awesome description",
+    "description": "A blog post",
     "primaryKey": "id",
     "properties": {
         "id": {
             "$ref": "#/definitions/positiveInt"
         },
-        "firstName": {
-            "x-faker": "name.firstName",
+        "title": {
+            "x-faker": "lorem.sentence",
             "type": "string"
         },
-        "lastName": {
-            "x-faker": "name.lastName",
+        "content": {
+            "x-faker": "lorem.paragraph",
             "type": "string"
         },
-        "username": {
-            "x-faker": "internet.userName",
+        "description": {
+            "x-faker": "lorem.paragraph",
             "type": "string"
         },
-        "email": {
-            "x-faker": "internet.email",
+        "legacyPermalink": {
+            "x-faker": "internet.url",
             "type": "string",
-            "format": "email"
+            "format": "url"
+        },
+        "userId": {
+            "$ref": "#/definitions/positiveInt"
         },
         "createdAt": {
             "type": "string",
@@ -40,10 +43,10 @@
         }
     },
     "required": [
-        "email",
-        "firstName",
-        "lastName",
-        "username"
+        "content",
+        "description",
+        "userId",
+        "title"
     ],
     "definitions": {
         "positiveInt": {
@@ -53,12 +56,12 @@
         }
     },
     "x-relationships": {
-        "posts": {
-            "relation": "HasManyRelation",
-            "modelClass": "Post",
+        "user": {
+            "relation": "BelongsToOneRelation",
+            "modelClass": "User",
             "join": {
-                "from": "users.id",
-                "to": "posts.user_id"
+                "from": "posts.user_id",
+                "to": "users.id"
             }
         }
     }

@@ -7,7 +7,7 @@ init(knex);
 beforeAll(async () => {
   await aKnexCleaner.clean(knex, {
     mode: "truncate",
-    ignoreTables: ["knex_migrations"]
+    ignoreTables: ["knex_migrations", "knex_migrations_lock"]
   });
 });
 

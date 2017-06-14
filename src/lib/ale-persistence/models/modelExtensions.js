@@ -49,8 +49,8 @@ function build(
       trace('Generated Attributes');
       trace($attr);
       if (!includeTimestamps) {
-        delete $attr.created_at;
-        delete $attr.updated_at;
+        delete $attr.createdAt;
+        delete $attr.updatedAt;
       }
       if (!includeId) {
         delete $attr.id;
@@ -69,8 +69,8 @@ function create(attrs: any = {}): QueryBuilder {
       const $attr = Object.assign({}, attributes, attrs);
       trace('Generated Attributes');
       trace($attr);
-      delete $attr.created_at;
-      delete $attr.updated_at;
+      delete $attr.createdAt;
+      delete $attr.updatedAt;
       delete $attr.id;
       return $attr;
     }

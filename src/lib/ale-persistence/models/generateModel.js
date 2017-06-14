@@ -43,7 +43,7 @@ function generateModelFromSchema(schemaInput: isSchema): () => Model {
       return schema;
     }
     static get test() {
-      if (process.env.NODE_ENV === 'test') {
+      if (process.env.NODE_ENV !== 'production') {
         return {
           build: build.bind(this),
           create: create.bind(this),
@@ -65,6 +65,18 @@ function generateModelFromSchema(schemaInput: isSchema): () => Model {
 
     // This is called when an object is read from database.
     $parseDatabaseJson(json) {
+      json = mapKeys(json, (value, key) => camelCase(key)); // eslint-disable-line no-param-reassign
+
+      return super.$parseDatabaseJson(json);
+    }
+
+    $formatJson(json) {
+      json = super.$formatDatabaseJson(json); // eslint-disable-line no-param-reassign
+      return mapKeys(json, (value, key) => snakeCase(key));
+    }
+
+    // This is called when an object is read from database.
+    $parseJson(json) {
       json = mapKeys(json, (value, key) => camelCase(key)); // eslint-disable-line no-param-reassign
 
       return super.$parseDatabaseJson(json);
