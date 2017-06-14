@@ -1,17 +1,16 @@
-const { build } = require('../build/lib/ale-persistence/utils/testUtils');
-const { User } = require('../build/models');
+const init = require("../build/lib/ale-persistence/init").default;
+const { build } = require("../build/lib/ale-persistence/utils/testUtils");
 
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
-  return knex('users').del()
-    .then(() => {
-      // Inserts seed entries
-      return knex('users').insert([
-        build(User),
-        build(User),
-        build(User),
-        build(User),
-        build(User)
-      ]);
-    });
+  init(knex);
+  const { User } = require("../build/models").default;
+  return knex("users").del().then(() => {
+    // Inserts seed entries
+    const data = [];
+    for (let index = 0; index < 200; index++) {
+      data.push(build(User));
+    }
+    return knex("users").insert(data);
+  });
 };

@@ -1,5 +1,6 @@
-import defaultModel from './defaultModel';
-import modelsProxy from './modelsProxy';
+import { log } from 'logger';
+import generateModel from './generateModel';
 
-export default defaultModel;
-export { modelsProxy };
+log(`models/index.js`);
+
+export default generateModel;

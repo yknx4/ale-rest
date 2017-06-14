@@ -4,9 +4,9 @@ import { mapValues, mapKeys } from 'lodash';
 
 import { camelKey } from '../selectors';
 import { generateInputField } from './index';
-import logger from '~/logger'; // eslint-disable-line
-const { info } = logger;
+import { info, log } from 'logger'; // eslint-disable-line
 
+log(`createInputType.js`);
 function createInputType(model: Function): GraphQLInputObjectType {
   const { schema } = model;
   const { title: name, properties, description } = schema;

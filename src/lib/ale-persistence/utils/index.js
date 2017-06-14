@@ -1,3 +1,7 @@
-import * as test from './testUtils';
+import { log } from 'logger';
+import Cursor from './Cursor';
+import * as base64 from './base64';
 
-export { test }; // eslint-disable-line
+log(`utils/index.js`);
+
+export { Cursor, base64 }; // eslint-disable-line import/prefer-default-export

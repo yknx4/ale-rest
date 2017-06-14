@@ -1,43 +1,25 @@
-import '~/config/knex'; // eslint-disable-line
-
+import { models } from 'ale-persistence';
 import {
   asFn,
   camelKey,
   getDescription,
   getOutputFromInstance,
-  instanceToResult,
   pluralKey,
   resolveCollection,
   resolveSingleElement,
 } from './selectors';
-
-import models from '~/models'; // eslint-disable-line
-import { exec } from 'shelljs'; // eslint-disable-line
-import { utils } from '~/lib/ale-persistence'; // eslint-disable-line
+import '../../../models';
 
 const { User } = models;
-
-const { test: { create } } = utils;
 
 describe('selectors', () => {
   const name = 'awesome name';
   const data = {
-    attributes: {
-      first_name: name,
-    },
-  };
-  const expectedOutput = {
     firstName: name,
   };
   const meta = {
     fieldName: 'firstName',
   };
-
-  describe('instanceToResult', () => {
-    it('converts attributes map to camelCase', () => {
-      expect(instanceToResult(data)).toEqual(expectedOutput);
-    });
-  });
 
   describe('getOutputFromInstance', () => {
     it('should get the appropiate field based on meta fieldName', () => {
@@ -69,12 +51,15 @@ describe('selectors', () => {
   });
 
   describe('resolveSingleElement', () => {
-    let resolved;
-    beforeAll(async () => {
-      resolved = await create(User);
+    let created;
+    beforeEach(async () => {
+      created = await User.test.create();
     });
     it('should find model by id', async () => {
-      await resolveSingleElement({ User }, 'User')(null, { id: resolved.id });
+      const resolved = await resolveSingleElement('User')(null, {
+        id: created.id,
+      });
+      expect(resolved).toHaveProperty('id', created.id);
     });
   });
 
@@ -90,12 +75,13 @@ describe('selectors', () => {
     let resolved;
     let count;
     beforeAll(async () => {
-      await create(User);
-      count = await User.count();
-      resolved = await resolveCollection({ a: User }, 'a')(null, {});
+      await User.test.create();
+      await User.test.create();
+      count = await User.query().resultSize();
+      resolved = await resolveCollection('User')(null, {});
     });
     it('should get the collection of Model (User)', () => {
-      expect(resolved.length).toEqual(parseInt(count, 10));
+      expect(resolved.edges.length).toEqual(parseInt(count, 10));
     });
   });
 });

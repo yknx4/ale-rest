@@ -1,13 +1,16 @@
 module.exports = {
-  verbose: true,
+  verbose: false,
   bail: true,
   collectCoverage: true,
   collectCoverageFrom: [
     "src/**/*.js",
     "!**/node_modules/**",
     "!**/vendor/**",
+    "!src/init.js",
+    "!src/logger.js",
+    "!src/typedefs.js",
     "!src/**/index.js",
-    "!src/**/config/*.js",
+    "!src/**/config/*.js"
   ],
   coverageDirectory: "../coverage",
   coverageThreshold: {

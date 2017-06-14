@@ -1,28 +1,51 @@
 {
   "sourceMaps": true,
   "presets": [
-    "flow",
-    ["env", {
-      "exclude": ["transform-async-to-generator"],
-      "targets": {
-        "node": "current"
+    [
+      "env",
+      {
+        "exclude": [
+          "transform-async-to-generator"
+        ],
+        "targets": {
+          "node": "current"
+        }
       }
-    }]
+    ],
+    "stage-2",
+    "react",
+    "flow"
   ],
   "plugins": [
-    "fast-async",
+    "transform-decorators-legacy",
     "lodash",
     "closure-elimination",
     "transform-object-rest-spread",
     "loop-optimizer",
     "transform-function-bind",
     "transform-class-properties",
-    ["root-import", {
-      "rootPathSuffix": "src"
-    }],
-    ["flow-runtime", {
-      "annotate": true
-    }]
+    [
+      "module-resolver",
+      {
+        "root": [
+          "./src",
+          "./src/lib"
+        ],
+        "alias": {
+          "ale-persistence": "/lib/ale-persistence",
+          "logger": "./logger.js"
+        }
+      }
+    ],
+    [
+      "flow-runtime",
+      {
+        "assert": true,
+        "annotate": true
+      }
+    ],
+    "syntax-flow",
+    "inline-json-import"
   ],
   "env": {
     "production": {
@@ -31,9 +54,16 @@
         "**/node_modules/*.js"
       ],
       "plugins": [
+        [
+          "flow-runtime",
+          {
+            "assert": false,
+            "annotate": false
+          }
+        ],
+        "fast-async",
         "transform-property-literals",
         "transform-node-env-inline",
-        "inline-json-import",
         "transform-simplify-comparison-operators",
         "inline-dotenv",
         "transform-inline-environment-variables",

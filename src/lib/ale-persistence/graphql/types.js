@@ -1,3 +1,6 @@
+/* @flow */
+import { log } from 'logger';
+
 import {
   GraphQLNonNull,
   GraphQLInt,
@@ -5,11 +8,13 @@ import {
   GraphQLString,
 } from 'graphql';
 
-const jsonSchemaTypeToGraphQlType = (type: ?string) =>
-  ({
-    string: GraphQLString,
-    integer: new GraphQLNonNull(GraphQLInt),
-  }[type] || GraphQLString);
+log(`types.js`);
+const typesMap = {
+  string: GraphQLString,
+  integer: new GraphQLNonNull(GraphQLInt),
+};
+const jsonSchemaTypeToGraphQlType = (type: ?string): any =>
+  typesMap[type] || GraphQLString;
 
 const defaultInputFields = {
   order: {

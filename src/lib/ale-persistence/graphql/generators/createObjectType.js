@@ -1,30 +1,30 @@
-import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql';
-
+import { GraphQLObjectType } from 'graphql';
 import { mapValues, mapKeys } from 'lodash';
-
+import { info, log } from 'logger';
+import { typesStore } from 'ale-persistence/store';
+import { models } from 'ale-persistence';
 import { camelKey, asFn } from '../selectors';
 import { generateField } from './index';
-import logger from '~/logger'; // eslint-disable-line
-const { info } = logger;
+import { nodeInterface } from './nodeDefinitions';
 
-function createObjectType(
-  model: Function,
-  graphqlInterface: GraphQLInterfaceType
-): GraphQLObjectType {
-  const { schema } = model;
-  const { title: name, description, properties } = schema;
+log(`createObjectType.js`);
+function createObjectType(modelName: string): GraphQLObjectType {
+  const model = models[modelName];
+  const { jsonSchema } = model;
+  const { title: name, description, properties } = jsonSchema;
   info(`Creating GraphQLObjectType for ${name}`);
   // debug(properties);
   let fieldsData = mapValues(properties, generateField);
   fieldsData = mapKeys(fieldsData, camelKey);
-  // debug(fieldsData);
   const fields = asFn(fieldsData);
-  return new GraphQLObjectType({
+  const newType = new GraphQLObjectType({
     name,
     description,
     fields,
-    interfaces: [graphqlInterface],
+    interfaces: [nodeInterface],
   });
+  typesStore[name] = newType;
+  return newType;
 }
 
 export default createObjectType;

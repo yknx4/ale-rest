@@ -1,27 +1,38 @@
 import { createSelector } from 'reselect';
-import {
-  getOutputFromInstance as resolve,
-  getDescription as parseDescription,
-} from '../selectors';
+import { globalIdField } from 'graphql-relay';
+import { trace, log } from 'logger';
+import { getDescription as parseDescription } from '../selectors';
 import { jsonSchemaTypeToGraphQlType } from '../types';
-import logger from '~/logger'; // eslint-disable-line
-const { info } = logger;
 
+type fieldType = {
+  type: any,
+  description: string,
+};
+
+type schemaFieldType = {
+  type: string,
+  description: ?string,
+};
+
+log(`generateField.js`);
 const getType = ({ type }): ?string => type;
 const getDescription = ({ description }): ?string => description;
+const getName = (_, name) => name;
 
-const generateField = createSelector(
-  [getType, getDescription],
-  (type, description): Object => {
-    info(
-      `Generating Field for type ${type} ${description != null
+const generateField: (schemaFieldType, string) => fieldType = createSelector(
+  [getType, getDescription, getName],
+  (type, description, name): fieldType => {
+    trace(
+      `Generating Field ${name} with type ${type} ${description != null
         ? ` with description ${description}`
         : ''}`
     );
+    if (name === 'id') {
+      return globalIdField();
+    }
     return {
       type: jsonSchemaTypeToGraphQlType(type),
-      description: parseDescription(description),
-      resolve,
+      description: parseDescription(description, name),
     };
   }
 );

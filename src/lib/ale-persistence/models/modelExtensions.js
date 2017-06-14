@@ -1,28 +1,80 @@
-import stringify from 'json-stringify-safe';
-import logger from '~/logger'; // eslint-disable-line
+/* @flow */
+import { trace, log } from 'logger';
+import jsf from 'json-schema-faker';
+import chance from 'chance';
+import faker from 'faker';
+import { Model, QueryBuilder } from 'objection';
+import Cursor from '../utils/Cursor';
+import { stringify64 } from '../utils/base64';
+import type { JSON$Schema } from '../types';
 
-const { info } = logger;
+jsf.extend('faker', () => faker);
+jsf.extend('chance', () => chance);
 
-function validateWithSchema() {
-  info(
-    `Validating ${stringify(this.attributes)} against ${this.schema
-      .title} schema.`
-  );
-  const validSchema = this.schemaValidator(this.attributes);
-  info(`Result: ${validSchema}`);
-  this.schemaErrors = this.schemaValidator.errors;
-  return Promise.resolve(validSchema);
+log(`modelExtensions.js`);
+
+type node = { cursor: string, node: any };
+function toNode(cursorData: Cursor, index: number, total: ?number): node {
+  trace(`Converting into GraphQL node`);
+  return {
+    cursor: stringify64(cursorData.offsetCursor(index, total)),
+    node: this,
+  };
 }
 
-function rejectIfInvalid(valid: boolean): Promise<any> {
-  if (!valid) {
-    return Promise.reject(new Error('Invalid Object'));
+type isBuildOptions = {
+  includeTimestamps: ?boolean,
+  includeId: ?boolean,
+};
+
+type anyFn = any => any;
+
+const withFakeAttributes = (schema: JSON$Schema) => (
+  fn: anyFn,
+  transformFn: anyFn
+): any => fn(transformFn(jsf(schema)));
+
+function build(
+  attrs: any = {},
+  { includeTimestamps, includeId }: isBuildOptions = {
+    includeTimestamps: false,
+    includeId: false,
   }
-  return Promise.resolve();
+): Model {
+  const schema: JSON$Schema = Object.assign({}, this.jsonSchema);
+  return withFakeAttributes(schema)(
+    this.fromJson.bind(this),
+    (attributes: any): any => {
+      const $attr = Object.assign({}, attributes, attrs);
+      trace('Generated Attributes');
+      trace($attr);
+      if (!includeTimestamps) {
+        delete $attr.created_at;
+        delete $attr.updated_at;
+      }
+      if (!includeId) {
+        delete $attr.id;
+      }
+      return $attr;
+    }
+  );
 }
 
-function validateSaveSchema() {
-  return this.validateWithSchema().then(rejectIfInvalid);
+function create(attrs: any = {}): QueryBuilder {
+  const schema: JSON$Schema = Object.assign({}, this.jsonSchema);
+  const query = this.query();
+  return withFakeAttributes(schema)(
+    query.insertAndFetch.bind(query),
+    (attributes: any): any => {
+      const $attr = Object.assign({}, attributes, attrs);
+      trace('Generated Attributes');
+      trace($attr);
+      delete $attr.created_at;
+      delete $attr.updated_at;
+      delete $attr.id;
+      return $attr;
+    }
+  );
 }
 
-export { validateWithSchema, validateSaveSchema };
+export { toNode, build, create }; // eslint-disable-line import/prefer-default-export
