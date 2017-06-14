@@ -8,7 +8,7 @@ import { generateField } from './index';
 import { nodeInterface } from './nodeDefinitions';
 
 log(`createObjectType.js`);
-function createObjectType(modelName: string) {
+function createObjectType(modelName: string): GraphQLObjectType {
   const model = models[modelName];
   const { jsonSchema } = model;
   const { title: name, description, properties } = jsonSchema;

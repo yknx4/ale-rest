@@ -35,6 +35,7 @@ const withFakeAttributes = (schema: JSON$Schema) => (
 ): any => fn(transformFn(jsf(schema)));
 
 function build(
+  attrs: any = {},
   { includeTimestamps, includeId }: isBuildOptions = {
     includeTimestamps: false,
     includeId: false,
@@ -44,7 +45,7 @@ function build(
   return withFakeAttributes(schema)(
     this.fromJson.bind(this),
     (attributes: any): any => {
-      const $attr = Object.assign({}, attributes);
+      const $attr = Object.assign({}, attributes, attrs);
       trace('Generated Attributes');
       trace($attr);
       if (!includeTimestamps) {
@@ -59,13 +60,13 @@ function build(
   );
 }
 
-function create(): QueryBuilder {
+function create(attrs: any = {}): QueryBuilder {
   const schema: JSON$Schema = Object.assign({}, this.jsonSchema);
   const query = this.query();
   return withFakeAttributes(schema)(
-    query.insert.bind(query),
+    query.insertAndFetch.bind(query),
     (attributes: any): any => {
-      const $attr = Object.assign({}, attributes);
+      const $attr = Object.assign({}, attributes, attrs);
       trace('Generated Attributes');
       trace($attr);
       delete $attr.created_at;

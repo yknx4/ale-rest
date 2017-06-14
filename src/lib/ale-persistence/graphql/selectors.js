@@ -30,10 +30,16 @@ const getDescription = (
   name: string = 'missing description'
 ): string => (isString(description) ? description : title(name));
 
-const camelKey = (_, k) => camel(k);
-const pluralKey = (_, k) => plural(k);
+const camelKey = (_: any, k: string): string => camel(k);
+const pluralKey = (_: any, k: string): string => plural(k);
 
-const executeQuery = async (Model, $selectFields, $orderSql, $start, $end) =>
+const executeQuery: () => Promise<any> = async (
+  Model,
+  $selectFields,
+  $orderSql,
+  $start,
+  $end
+) =>
   Model.query()
     .select(...$selectFields)
     .orderByRaw($orderSql)

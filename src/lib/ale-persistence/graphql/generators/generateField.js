@@ -4,14 +4,24 @@ import { trace, log } from 'logger';
 import { getDescription as parseDescription } from '../selectors';
 import { jsonSchemaTypeToGraphQlType } from '../types';
 
+type fieldType = {
+  type: any,
+  description: string,
+};
+
+type schemaFieldType = {
+  type: string,
+  description: ?string,
+};
+
 log(`generateField.js`);
 const getType = ({ type }): ?string => type;
 const getDescription = ({ description }): ?string => description;
 const getName = (_, name) => name;
 
-const generateField = createSelector(
+const generateField: (schemaFieldType, string) => fieldType = createSelector(
   [getType, getDescription, getName],
-  (type, description, name): Object => {
+  (type, description, name): fieldType => {
     trace(
       `Generating Field ${name} with type ${type} ${description != null
         ? ` with description ${description}`
