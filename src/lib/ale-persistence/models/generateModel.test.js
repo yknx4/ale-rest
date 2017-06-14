@@ -7,7 +7,7 @@ const { knex } = libState;
 const schema = {
   title: 'User',
   type: 'object',
-  'x-tableName': 'users-ale-persistence-test',
+  tableName: 'users-ale-persistence-test',
   properties: {
     id: {
       $ref: '#/definitions/positiveInt',

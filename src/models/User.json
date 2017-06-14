@@ -3,7 +3,7 @@
     "id": "https://www.ale.world/schemas/user",
     "title": "User",
     "type": "object",
-    "x-tableName": "users",
+    "tableName": "users",
     "additionalProperties": false,
     "description": "awesome description",
     "primaryKey": "id",

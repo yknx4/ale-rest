@@ -6,6 +6,9 @@ module.exports = {
     "src/**/*.js",
     "!**/node_modules/**",
     "!**/vendor/**",
+    "!src/init.js",
+    "!src/logger.js",
+    "!src/typedefs.js",
     "!src/**/index.js",
     "!src/**/config/*.js"
   ],
